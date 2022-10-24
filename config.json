@@ -35,7 +35,7 @@
                 //["MinProtocol", "TLSv1.3"]
             ]
         }
-    ],
+    ],*/
     "db_clients": [
         {
             //name: Name of the client,'default' by default
@@ -49,11 +49,11 @@
             //port: Server port, 5432 by default
             "port": 5432,
             //dbname: Database name
-            "dbname": "test",
+            "dbname": "IIAP_DB",
             //user: 'postgres' by default
-            "user": "",
+            "user": "drogon_user",
             //passwd: '' by default
-            "passwd": "",
+            "passwd": "drogon",
             //is_fast: false by default, if it is true, the client is faster but user can't call
             //any synchronous interface of it.
             "is_fast": false,
@@ -70,7 +70,7 @@
             // the wiki for more details.
             "auto_batch": false
         }
-    ],
+    ],/*
     "redis_clients": [
         {
             //name: Name of the client,'default' by default
@@ -235,7 +235,7 @@
         //0 means cache forever, the negative value means no cache
         "static_files_cache_time": 5,
         //simple_controllers_map: Used to configure mapping from path to simple controller
-        "simple_controllers_map": [
+        /*"simple_controllers_map": [
             {
                 "path": "/path/name",
                 "controller": "controllerClassName",
@@ -247,7 +247,7 @@
                     "FilterClassName"
                 ]
             }
-        ],
+        ],*/
         //idle_connection_timeout: Defaults to 60 seconds, the lifetime 
         //of the connection without read or write
         "idle_connection_timeout": 60,
