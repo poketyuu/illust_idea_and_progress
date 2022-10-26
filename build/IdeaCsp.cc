@@ -18,7 +18,8 @@ std::string IdeaCsp::genText(const DrTemplateData& IdeaCsp_view_data)
 	drogon::OStringStream IdeaCsp_tmp_stream;
 	std::string layoutName{""};
 	IdeaCsp_tmp_stream << "<!DOCTYPE HTML>\n";
-//auto  = IdeaCsp_view_data.get<>()
+auto ideas = IdeaCsp_view_data.get<std::vector<std::pair<int,std::vector<std::unordered_map<std::string,std::string>>>>>("idea");
+auto states = IdeaCsp_view_data.get<std::map<int,std::string>>("state");
 {
     auto templ=DrTemplateBase::newTemplate("temphead");
     if(templ){
@@ -35,6 +36,36 @@ IdeaCsp_tmp_stream<<"\n";
 }
 IdeaCsp_tmp_stream<<"\n";
 	IdeaCsp_tmp_stream << "<main>\n";
+	IdeaCsp_tmp_stream << "<div class=\"container-fluid bg-secondary bg-opacity-10\">\n";
+	IdeaCsp_tmp_stream << "<div class=\"container px-4 py-5\">\n";
+ for(auto ideacard:ideas){
+	IdeaCsp_tmp_stream << "<h2 class=\"pb-2 border-bottom text-center\">";
+ IdeaCsp_tmp_stream<<states.at(ideacard.first);
+	IdeaCsp_tmp_stream << "</h2>\n";
+	IdeaCsp_tmp_stream << "<div class=\"row g-4 py-5 row-cols-1 row-cols-md-3 g-4\">\n";
+ for(auto idea:ideacard.second){
+	IdeaCsp_tmp_stream << "<div class=\"col\">\n";
+	IdeaCsp_tmp_stream << "<div class=\"card\">\n";
+	IdeaCsp_tmp_stream << "<div class=\"card-body\">\n";
+	IdeaCsp_tmp_stream << "<h2 class=\"card-title\">";
+ IdeaCsp_tmp_stream<<idea["chara"];
+	IdeaCsp_tmp_stream << "</h2>\n";
+	IdeaCsp_tmp_stream << "<p class=\"card-text\">";
+ IdeaCsp_tmp_stream<<idea["explain"];
+	IdeaCsp_tmp_stream << "</p>\n";
+	IdeaCsp_tmp_stream << "</div>\n";
+ if(true){
+	IdeaCsp_tmp_stream << "<div class=\"card-footer text-muted\">";
+ IdeaCsp_tmp_stream<<idea["deadline"];
+	IdeaCsp_tmp_stream << "</div>\n";
+	IdeaCsp_tmp_stream << "</div>\n";
+ }
+	IdeaCsp_tmp_stream << "</div>\n";
+ }
+	IdeaCsp_tmp_stream << "</div>\n";
+ }
+	IdeaCsp_tmp_stream << "</div>\n";
+	IdeaCsp_tmp_stream << "</div>\n";
 	IdeaCsp_tmp_stream << "</main>\n";
 	IdeaCsp_tmp_stream << "<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p\" crossorigin=\"anonymous\"></script>\n";
 	IdeaCsp_tmp_stream << "</body>\n";

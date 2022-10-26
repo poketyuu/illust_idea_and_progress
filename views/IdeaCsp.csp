@@ -1,11 +1,34 @@
 <!DOCTYPE HTML>
 <%c++
-//auto  = @@.get<>()
+auto ideas = @@.get<std::vector<std::pair<int,std::vector<std::unordered_map<std::string,std::string>>>>>("idea");
+auto states = @@.get<std::map<int,std::string>>("state");
 %>
 <%view temphead%>
 <body>
 <%view tempbody%>
 <main>
+<div class="container-fluid bg-secondary bg-opacity-10">
+<div class="container px-4 py-5">
+<%c++ for(auto ideacard:ideas){%>
+<h2 class="pb-2 border-bottom text-center"><%c++ $$<<states.at(ideacard.first);%></h2>
+<div class="row g-4 py-5 row-cols-1 row-cols-md-3 g-4">
+<%c++ for(auto idea:ideacard.second){%>
+<div class="col">
+<div class="card">
+<div class="card-body">
+<h2 class="card-title"><%c++ $$<<idea["chara"];%></h2>
+<p class="card-text"><%c++ $$<<idea["explain"];%></p>
+</div>
+<%c++ if(!idea["deadline"].isempty()){%>
+<div class="card-footer text-muted"><%c++ $$<<idea["deadline"];%></div>
+</div>
+<%c++ }%>
+</div>
+<%c++ }%>
+</div>
+<%c++ }%>
+</div>
+</div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </body>

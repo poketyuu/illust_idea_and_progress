@@ -11,7 +11,6 @@ void login::logincheck(const HttpRequestPtr &req, std::function<void(const HttpR
         auto result = drogon::app().getDbClient("default")->execSqlAsyncFuture(LoginSQL(), UserID).get();
         if (result.size() > 0)
         {
-            req->session()->insert("loginState", true);
             req->session()->insert("loginUser", UserID);
             newpage = "/idea/";
         }

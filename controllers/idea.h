@@ -19,4 +19,8 @@ class idea : public drogon::HttpController<idea>
     // void get(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, int p1, std::string p2);
     // void your_method_name(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, double p1, int p2) const;
     void get(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);
+    void newidea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
+    std::string IdeaListSQL() const;
+    std::string StateListSQL() const;
+    std::map<int,std::string> MakeStateList(std::string UserID) const;
 };
