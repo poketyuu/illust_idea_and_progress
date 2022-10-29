@@ -90,7 +90,7 @@ IdeaMenu_tmp_stream<<"\n";
 	IdeaMenu_tmp_stream << "<button class=\"btn-primary\" type=\"submit\">変更</button>\n";
 	IdeaMenu_tmp_stream << "</form>\n";
 	IdeaMenu_tmp_stream << "<div class=\"mb-3\">\n";
-	IdeaMenu_tmp_stream << "<button type=\"button\" class=\"btn btn-danger\">削除</button>\n";
+	IdeaMenu_tmp_stream << "<a role=\"button\" class=\"btn btn-danger\" href=\"DeleteIdea\">削除</a>\n";
 	IdeaMenu_tmp_stream << "</div>\n";
 	IdeaMenu_tmp_stream << "</div>\n";
 	IdeaMenu_tmp_stream << "</main>\n";

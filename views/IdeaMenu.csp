@@ -24,7 +24,7 @@
 <button class="btn-primary" type="submit">変更</button>
 </form>
 <div class="mb-3">
-<button type="button" class="btn btn-danger">削除</button>
+<a role="button" class="btn btn-danger" href="DeleteIdea">削除</a>
 </div>
 </div>
 </main>

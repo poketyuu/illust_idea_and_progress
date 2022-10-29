@@ -49,21 +49,52 @@ IdeaCsp_tmp_stream<<"\n";
  IdeaCsp_tmp_stream<<idea["cardtype"];
 	IdeaCsp_tmp_stream << ">\n";
 	IdeaCsp_tmp_stream << "<div class=\"card-body\">\n";
+	IdeaCsp_tmp_stream << "<a class=\"stretched-link\" href=";
+ IdeaCsp_tmp_stream<<idea["cardLink"];
+	IdeaCsp_tmp_stream << "></a>\n";
 	IdeaCsp_tmp_stream << "<h2 class=\"card-title\">";
  IdeaCsp_tmp_stream<<idea["chara"];
 	IdeaCsp_tmp_stream << "</h2>\n";
 	IdeaCsp_tmp_stream << "<p class=\"card-text\">";
  IdeaCsp_tmp_stream<<idea["explain"];
 	IdeaCsp_tmp_stream << "</p>\n";
+	IdeaCsp_tmp_stream << "<div style=\"z-index: 1; position: relative;\">\n";
+	IdeaCsp_tmp_stream << "<form action=\"changestate\" method=\"GET\">\n";
+	IdeaCsp_tmp_stream << "<input type=\"hidden\" name=\"progress_iid\" value=\"";
+ IdeaCsp_tmp_stream<<idea["ideaid"];
+	IdeaCsp_tmp_stream << "\">\n";
+	IdeaCsp_tmp_stream << "<select class=\"form-select\" name=\"progress_turn\" onchange=\"SelectChange('button_";
+ IdeaCsp_tmp_stream<<idea["ideaid"];
+	IdeaCsp_tmp_stream << "')\">\n";
+ for(const auto& [turn,context]:states){
+ if(turn == -1) continue;
+ if(ideacard.first == turn){
+	IdeaCsp_tmp_stream << "<option value=\"";
+IdeaCsp_tmp_stream<<turn;
+	IdeaCsp_tmp_stream << "\" selected>";
+IdeaCsp_tmp_stream<<context;
+	IdeaCsp_tmp_stream << "</option>\n";
+ }else{
+	IdeaCsp_tmp_stream << "<option value=\"";
+IdeaCsp_tmp_stream<<turn;
+	IdeaCsp_tmp_stream << "\">";
+IdeaCsp_tmp_stream<<context;
+	IdeaCsp_tmp_stream << "</option>\n";
+ }
+ }
+	IdeaCsp_tmp_stream << "<option value=\"-1\">完成</option>\n";
+	IdeaCsp_tmp_stream << "</select>\n";
+	IdeaCsp_tmp_stream << "<button class=\"btn-primary\" id=\"button_";
+ IdeaCsp_tmp_stream<<idea["ideaid"];
+	IdeaCsp_tmp_stream << "\" type=\"submit\" disabled>変更</button>\n";
+	IdeaCsp_tmp_stream << "</form>\n";
+	IdeaCsp_tmp_stream << "</div>\n";
 	IdeaCsp_tmp_stream << "</div>\n";
  if(!idea["deadline"].empty()){
 	IdeaCsp_tmp_stream << "<div class=\"card-footer text-muted\">締切:";
  IdeaCsp_tmp_stream<<idea["deadline"];
 	IdeaCsp_tmp_stream << "</div>\n";
  }
-	IdeaCsp_tmp_stream << "<a class=\"stretched-link\" href=";
- IdeaCsp_tmp_stream<<idea["cardLink"];
-	IdeaCsp_tmp_stream << "></a>\n";
 	IdeaCsp_tmp_stream << "</div>\n";
 	IdeaCsp_tmp_stream << "</div>\n";
  }
@@ -73,6 +104,12 @@ IdeaCsp_tmp_stream<<"\n";
 	IdeaCsp_tmp_stream << "</div>\n";
 	IdeaCsp_tmp_stream << "</main>\n";
 	IdeaCsp_tmp_stream << "<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p\" crossorigin=\"anonymous\"></script>\n";
+	IdeaCsp_tmp_stream << "<script>\n";
+	IdeaCsp_tmp_stream << "function SelectChange(id){\n";
+	IdeaCsp_tmp_stream << "    const button=document.getElementById(id);\n";
+	IdeaCsp_tmp_stream << "    button.disabled=false;\n";
+	IdeaCsp_tmp_stream << "}\n";
+	IdeaCsp_tmp_stream << "</script>\n";
 	IdeaCsp_tmp_stream << "</body>\n";
 	IdeaCsp_tmp_stream << "</html>\n";
 if(layoutName.empty())

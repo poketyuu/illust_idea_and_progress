@@ -18,6 +18,7 @@ class idea : public drogon::HttpController<idea>
     METHOD_ADD(idea::AddIdea, "/AddIdea", Post, "IDlogin");
     METHOD_ADD(idea::EditIdea, "/{1}/EditIdea", Post, "IDlogin");
     METHOD_ADD(idea::DeleteIdea, "/{1}/DeleteIdea", Get, "IDlogin");
+    METHOD_ADD(idea::ChageState, "/changestate", Get, "IDlogin");
 
     METHOD_LIST_END
     // your declaration of processing function maybe like this:
@@ -29,6 +30,7 @@ class idea : public drogon::HttpController<idea>
     void AddIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
     void EditIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const;
     void DeleteIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const;
+    void ChageState(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
     std::string IdeaListSQL() const;
     std::string StateListSQL() const;
     std::string IdeaAddSQL(std::string UserID, int Ideaid,bool deadlineExist) const;

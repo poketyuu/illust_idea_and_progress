@@ -55,7 +55,8 @@ void idea::get(const HttpRequestPtr &req, std::function<void(const HttpResponseP
              {"explain", row["explain"].as<std::string>()}, 
              {"deadline", deadline},
              {"cardtype",cardtype},
-             {"cardLink",cardLink}
+             {"cardLink",cardLink},
+             {"ideaid",row["iid"].as<std::string>()}
              });
         }
         IdeaList.push_back(std::pair<int,
@@ -166,8 +167,43 @@ void idea::EditIdea(const HttpRequestPtr &req, std::function<void(const HttpResp
 }
 void idea::DeleteIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const
 {
+    auto UserID = req->session()->get<std::string>(ID);
+    auto viewdata = HttpViewData();
+    try
+    {
+        auto DBclient = drogon::app().getDbClient("default");
+        auto result = DBclient->execSqlAsyncFuture("DELETE FROM idea WHERE id = $1 AND iid = $2", UserID, Ideaid).get();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+    viewdata.insert("newpage", "/idea/");
+    auto res = drogon::HttpResponse::newHttpViewResponse("PageTransition.csp", viewdata);
+    callback(res);
 }
-std::string idea::IdeaListSQL() const
+void idea::ChageState(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const
+{
+    auto UserID = req->session()->get<std::string>(ID);
+    auto para = req->getParameters();
+    try
+    {
+        auto DBclient = drogon::app().getDbClient("default");
+        auto stateid = DBclient->execSqlAsyncFuture("SELECT * FROM state where id = $1 AND turn = $2", UserID, std::stoi(para["progress_turn"])).get()[0]["sid"].as<int>();
+        auto result = DBclient->execSqlAsyncFuture("UPDATE progress SET sid = $1 WHERE id = $2 AND iid = $3", stateid, UserID, std::stoi(para["progress_iid"])).get();
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    
+    auto viewdata = HttpViewData();
+    viewdata.insert("newpage", "/idea/");
+    auto res = drogon::HttpResponse::newHttpViewResponse("PageTransition.csp", viewdata);
+    callback(res);
+}
+    std::string idea::IdeaListSQL() const
 {
     return std::string("select * from ideaview where id = $1");
 }
