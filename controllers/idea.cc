@@ -1,5 +1,6 @@
 #include "idea.h"
 #include "IdeaClass.h"
+#include <regex>
 #define ID "loginUser"
 
 // Add definition of your processing function here
@@ -18,6 +19,8 @@ void idea::get(const HttpRequestPtr &req, std::function<void(const HttpResponseP
         std::vector<std::unordered_map<std::string, std::string>> stepidea;
         for (auto row : result)
         {
+            std::string cardtype = R"("card border-secondory mb-3 h-100")";
+            std::string cardLink = std::string("\""+row["iid"].as<std::string>()+"/ideainfo\"");
             int turn = row["turn"].as<int>();
             if (turnCheck != turn)
             {
@@ -28,11 +31,32 @@ void idea::get(const HttpRequestPtr &req, std::function<void(const HttpResponseP
                 turnCheck = turn;
                 firstcheck = false;
             }
-            std::string deadline = row['deadline'].as<std::string>();
+            std::string deadline = row["deadline"].as<std::string>();
             if (!deadline.empty()){
-                time_t timenow = time(nullptr);
+                std::time_t timenow = time(nullptr);
+                std::tm dltm = TMFromSQLdata(deadline);
+                std::time_t dlt = std::mktime(&dltm);
+                if(dlt < timenow){
+                    cardtype = R"("card text-white bg-dark bg-opacity-75 mb-3 h-100")";
+                }else{
+                    if(dlt-timenow < 60*60*24*7){
+                        cardtype = R"("card text-white bg-danger mb-3 h-100")";
+                    }else if (dlt-timenow < 60*60*24*30)
+                    {
+                        cardtype = R"("card text-dark bg-warning bg-opacity-50 mb-3 h-100")";
+                    }else{
+                        cardtype = R"("card text-dark bg-info bg-opacity-25 mb-3 h-100")";
+                    }
+                    
+                }
             }
-            stepidea.push_back(std::unordered_map<std::string, std::string>{{"chara", row["chara"].as<std::string>()}, {"explain", row["explain"].as<std::string>()}, {"deadline", row["deadline"].as<std::string>()}});
+            stepidea.push_back(std::unordered_map<std::string, std::string>
+            {{"chara", row["chara"].as<std::string>()},
+             {"explain", row["explain"].as<std::string>()}, 
+             {"deadline", deadline},
+             {"cardtype",cardtype},
+             {"cardLink",cardLink}
+             });
         }
         IdeaList.push_back(std::pair<int,
                                      std::vector<std::unordered_map<std::string, std::string>>>{turnCheck, stepidea});
@@ -47,11 +71,133 @@ void idea::get(const HttpRequestPtr &req, std::function<void(const HttpResponseP
     }
     
 }
-std::string idea::IdeaListSQL() const{
+void idea::newidea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const
+{
+    callback(HttpResponse::newHttpViewResponse("NewIdea.csp"));
+}
+void idea::AddIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const
+{
+    try{
+        auto para = req->getParameters();
+        auto userID = req->session()->get<std::string>(ID);
+        auto DBclient = drogon::app().getDbClient("default");
+        auto NewIid = DBclient->execSqlAsyncFuture("SELECT iid from idea where id = $1 order by iid desc", userID).get()[0]["iid"].as<int>();
+        NewIid++;
+        std::string deadline = para["idea_deadline"];
+        std::cout << NewIid << std::endl;
+        if (deadline.empty())
+        {
+            std::cout << IdeaAddSQL(userID, NewIid, false) << std::endl;
+            auto result = DBclient->execSqlAsyncFuture(IdeaAddSQL(userID, NewIid, false),
+                                                       para["idea_chara"], para["idea_explain"]).get();
+        }
+        else
+        {
+            auto result = DBclient->execSqlAsyncFuture(IdeaAddSQL(userID,NewIid,true),
+            para["idea_chara"],para["idea_explain"],deadline).get();
+        }
+        std::cout << "idea" << std::endl;
+        auto progress = DBclient->execSqlAsyncFuture("INSERT into progress values($1,$2,0)", userID, NewIid).get();
+        std::cout << "progress" << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    auto viewdata = HttpViewData();
+    viewdata.insert("newpage", "/idea/");
+    auto res = drogon::HttpResponse::newHttpViewResponse("PageTransition.csp", viewdata);
+    callback(res);
+}
+void idea::ideaInfo(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback,int Ideaid) const
+{
+    std::cout << "info:"<< Ideaid << std::endl;
+    try
+    {
+        auto userID = req->session()->get<std::string>(ID);
+        auto DBclient = drogon::app().getDbClient("default");
+        auto result = DBclient->execSqlAsyncFuture("SELECT * FROM idea WHERE id = $1 AND iid = $2", userID, Ideaid).get();
+        auto viewdata = HttpViewData();
+        viewdata.insert("title", result[0]["chara"].as<std::string>());
+        viewdata.insert("explain", result[0]["explain"].as<std::string>());
+        viewdata.insert("deadline", result[0]["deadline"].as<std::string>());
+        viewdata.insert("today", TMtoSQLdata());
+        callback(drogon::HttpResponse::newHttpViewResponse("IdeaMenu.csp", viewdata));
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+        auto viewdata = HttpViewData();
+        viewdata.insert("newpage", "/idea/");
+        auto res = drogon::HttpResponse::newHttpViewResponse("PageTransition.csp", viewdata);
+        callback(res);
+    }
+    
+}
+void idea::EditIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const
+{
+    auto UserID = req->session()->get<std::string>(ID);
+    auto para = req->getParameters();
+    try
+    {
+        auto DBclient = drogon::app().getDbClient("default");
+        std::string deadline = para["idea_deadline"];
+        if (deadline.empty())
+        {
+            auto result = DBclient->execSqlAsyncFuture(IdeaEditSQL(UserID, Ideaid, false),
+                                                       para["idea_chara"], para["idea_explain"])
+                              .get();
+        }
+        else
+        {
+            auto result = DBclient->execSqlAsyncFuture(IdeaEditSQL(UserID, Ideaid, true),
+                                                       para["idea_chara"], para["idea_explain"], deadline)
+                              .get();
+        }
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    auto viewdata = HttpViewData();
+    viewdata.insert("newpage", "/idea/");
+    auto res = drogon::HttpResponse::newHttpViewResponse("PageTransition.csp", viewdata);
+    callback(res);
+}
+void idea::DeleteIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const
+{
+}
+std::string idea::IdeaListSQL() const
+{
     return std::string("select * from ideaview where id = $1");
 }
 std::string idea::StateListSQL() const{
     return std::string("select * from state where id = $1 order by turn desc");
+}
+std::string idea::IdeaAddSQL(std::string UserID,int IdeaID,bool deadlineExist)const
+{
+    std::string newSQL;
+    if(deadlineExist){
+        newSQL=std::string("insert into idea values('" + UserID + "'," + std::to_string(IdeaID) + ",$1,$2,'" +TMtoSQLdata() + "',$3)");
+    }
+    else
+    {
+        newSQL=std::string("insert into idea values('" +UserID + "'," + std::to_string(IdeaID) + ",$1,$2,'"+TMtoSQLdata()+ "',NULL)");
+    }
+    return newSQL;
+}
+std::string idea::IdeaEditSQL(std::string UserID, int IdeaID, bool deadlineExist) const
+{
+    std::string newSQL;
+    if (deadlineExist)
+    {
+        newSQL = std::string("update idea set chara = $1,explain = $2,deadline = $3 where id = '" + UserID + "' and iid = " + std::to_string(IdeaID));
+    }
+    else
+    {
+        newSQL = std::string("update idea set chara = $1,explain = $2,deadline = NULL where id = '" + UserID + "' and iid = " + std::to_string(IdeaID));
+    }
+    return newSQL;
 }
 std::map<int, std::string> idea::MakeStateList(std::string UserID) const
 {
@@ -68,4 +214,26 @@ std::map<int, std::string> idea::MakeStateList(std::string UserID) const
         std::cerr << e.what() << '\n';
     }
     return statelist;
+}
+std::tm idea::TMFromSQLdata(std::string datastring) const
+{
+    std::smatch results;
+    std::string pattern = R"((\d{4})-(\d{2})-(\d{2}))";
+    if (std::regex_match(datastring, results, std::regex(pattern)))
+    {
+        int year = std::stoi(results[1].str());
+        int month = std::stoi(results[2].str());
+        int day = std::stoi(results[3].str());
+        return std::tm{0, 0, 0, day, month - 1, year - 1900};
+    }
+    return std::tm{0, 0, 0, 0, 0, 0};
+}
+std::string idea::TMtoSQLdata() const
+{
+    std::time_t timenow = time(nullptr);
+    struct tm *local;
+    localtime_r(&timenow, local);
+    char buf[128];
+    strftime(buf, sizeof(buf), R"(%Y-%m-%d)", local);
+    return std::string(buf);
 }

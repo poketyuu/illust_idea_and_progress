@@ -13,6 +13,11 @@ class idea : public drogon::HttpController<idea>
     // METHOD_ADD(idea::your_method_name, "/{1}/{2}/list", Get); // path is /idea/{arg1}/{arg2}/list
     // ADD_METHOD_TO(idea::your_method_name, "/absolute/path/{1}/{2}/list", Get); // path is /absolute/path/{arg1}/{arg2}/list
     METHOD_ADD(idea::get, "/", Get,"IDlogin"); // path is /idea/{arg2}/{arg1}
+    METHOD_ADD(idea::newidea, "/newidea", Get, "IDlogin");
+    METHOD_ADD(idea::ideaInfo, "/{1}/ideainfo", Get, "IDlogin");
+    METHOD_ADD(idea::AddIdea, "/AddIdea", Post, "IDlogin");
+    METHOD_ADD(idea::EditIdea, "/{1}/EditIdea", Post, "IDlogin");
+    METHOD_ADD(idea::DeleteIdea, "/{1}/DeleteIdea", Get, "IDlogin");
 
     METHOD_LIST_END
     // your declaration of processing function maybe like this:
@@ -20,7 +25,16 @@ class idea : public drogon::HttpController<idea>
     // void your_method_name(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, double p1, int p2) const;
     void get(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);
     void newidea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
+    void ideaInfo(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const;
+    void AddIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
+    void EditIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const;
+    void DeleteIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const;
     std::string IdeaListSQL() const;
     std::string StateListSQL() const;
-    std::map<int,std::string> MakeStateList(std::string UserID) const;
+    std::string IdeaAddSQL(std::string UserID, int Ideaid,bool deadlineExist) const;
+    std::string IdeaEditSQL(std::string UserID, int Ideaid, bool deadlineExist) const;
+    std::string IdeaDeleteSQL(std::string UserID, int Ideaid) const;
+    std::map<int, std::string> MakeStateList(std::string UserID) const;
+    std::tm TMFromSQLdata(std::string) const;
+    std::string TMtoSQLdata() const;
 };

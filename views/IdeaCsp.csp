@@ -14,15 +14,16 @@ auto states = @@.get<std::map<int,std::string>>("state");
 <div class="row g-4 py-5 row-cols-1 row-cols-md-3 g-4">
 <%c++ for(auto idea:ideacard.second){%>
 <div class="col">
-<div class="card">
+<div class=<%c++ $$<<idea["cardtype"];%>>
 <div class="card-body">
 <h2 class="card-title"><%c++ $$<<idea["chara"];%></h2>
 <p class="card-text"><%c++ $$<<idea["explain"];%></p>
 </div>
-<%c++ if(!idea["deadline"].isempty()){%>
-<div class="card-footer text-muted"><%c++ $$<<idea["deadline"];%></div>
-</div>
+<%c++ if(!idea["deadline"].empty()){%>
+<div class="card-footer text-muted">締切:<%c++ $$<<idea["deadline"];%></div>
 <%c++ }%>
+<a class="stretched-link" href=<%c++ $$<<idea["cardLink"];%>></a>
+</div>
 </div>
 <%c++ }%>
 </div>

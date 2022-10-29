@@ -45,7 +45,9 @@ IdeaCsp_tmp_stream<<"\n";
 	IdeaCsp_tmp_stream << "<div class=\"row g-4 py-5 row-cols-1 row-cols-md-3 g-4\">\n";
  for(auto idea:ideacard.second){
 	IdeaCsp_tmp_stream << "<div class=\"col\">\n";
-	IdeaCsp_tmp_stream << "<div class=\"card\">\n";
+	IdeaCsp_tmp_stream << "<div class=";
+ IdeaCsp_tmp_stream<<idea["cardtype"];
+	IdeaCsp_tmp_stream << ">\n";
 	IdeaCsp_tmp_stream << "<div class=\"card-body\">\n";
 	IdeaCsp_tmp_stream << "<h2 class=\"card-title\">";
  IdeaCsp_tmp_stream<<idea["chara"];
@@ -54,12 +56,15 @@ IdeaCsp_tmp_stream<<"\n";
  IdeaCsp_tmp_stream<<idea["explain"];
 	IdeaCsp_tmp_stream << "</p>\n";
 	IdeaCsp_tmp_stream << "</div>\n";
- if(true){
-	IdeaCsp_tmp_stream << "<div class=\"card-footer text-muted\">";
+ if(!idea["deadline"].empty()){
+	IdeaCsp_tmp_stream << "<div class=\"card-footer text-muted\">締切:";
  IdeaCsp_tmp_stream<<idea["deadline"];
 	IdeaCsp_tmp_stream << "</div>\n";
-	IdeaCsp_tmp_stream << "</div>\n";
  }
+	IdeaCsp_tmp_stream << "<a class=\"stretched-link\" href=";
+ IdeaCsp_tmp_stream<<idea["cardLink"];
+	IdeaCsp_tmp_stream << "></a>\n";
+	IdeaCsp_tmp_stream << "</div>\n";
 	IdeaCsp_tmp_stream << "</div>\n";
  }
 	IdeaCsp_tmp_stream << "</div>\n";

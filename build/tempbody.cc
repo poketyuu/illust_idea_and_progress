@@ -27,10 +27,10 @@ std::string tempbody::genText(const DrTemplateData& tempbody_view_data)
 	tempbody_tmp_stream << "<div class=\"collapse navbar-collapse\" id=\"navbarCollapse\">\n";
 	tempbody_tmp_stream << "<ul class=\"navbar-nav me-auto mb-2 mb-md-0\">\n";
 	tempbody_tmp_stream << "<li class=\"nav-item\">\n";
-	tempbody_tmp_stream << "<a class=\"nav-link\" aria-current=\"page\" href=\"dojin\">同人誌進捗管理</a>\n";
+	tempbody_tmp_stream << "<a class=\"nav-link\" aria-current=\"page\" href=\"/idea/newidea\">新規アイデア</a>\n";
 	tempbody_tmp_stream << "</li>\n";
 	tempbody_tmp_stream << "<li class=\"nav-item\">\n";
-	tempbody_tmp_stream << "<a class=\"nav-link\" aria-current=\"page\" href=\"hlist\">全体リスト</a>\n";
+	tempbody_tmp_stream << "<a class=\"nav-link\" aria-current=\"page\" href=\"dojin\">同人誌進捗管理</a>\n";
 	tempbody_tmp_stream << "</li>\n";
 	tempbody_tmp_stream << "</ul>\n";
 	tempbody_tmp_stream << "</div>\n";
