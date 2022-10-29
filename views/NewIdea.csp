@@ -12,12 +12,10 @@
 </div>
 <div class="mb-3">
 <label class="form-label">内容:</label>
+<textarea name="idea_explain" rows="7" cols="20" style="vertical-align:top;"></textarea>
 </div>
 <div class="mb-3">
-<textarea name="idea_explain" rows="7" cols="20"></textarea>
-</div>
-<div class="mb-3">
-<label class="form-label">締切</label>
+<label class="form-label">締切:</label>
 <input type="date" name="idea_deadline" pattern="\d{4}-\d{2}-\d{2}">
 <button class="btn-primary" type="submit">追加</button>
 <div class="mb-3">

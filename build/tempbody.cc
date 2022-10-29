@@ -20,7 +20,7 @@ std::string tempbody::genText(const DrTemplateData& tempbody_view_data)
 	tempbody_tmp_stream << "<header>\n";
 	tempbody_tmp_stream << "<nav class=\"navbar navbar-expand-md navbar-dark fixed-top bg-dark\">\n";
 	tempbody_tmp_stream << "<div class=\"container-fluid\">\n";
-	tempbody_tmp_stream << "<a class=\"navbar-brand\" href=\"/\">illust_idea_and_progress</a>\n";
+	tempbody_tmp_stream << "<a class=\"navbar-brand\" href=\"/idea/\">illust_idea_and_progress</a>\n";
 	tempbody_tmp_stream << "<button class=\"navbar-toggler\" type=\"button\" data-bs-toggle=\"collapse\" data-bs-target=\"#navbarCollapse\" aria-controls=\"navbarCollapse\" aria-expanded=\"false\" aria-label=\"Toggle navigation\">\n";
 	tempbody_tmp_stream << "<span class=\"navbar-toggler-icon\">\n";
 	tempbody_tmp_stream << "</button>\n";
@@ -30,7 +30,7 @@ std::string tempbody::genText(const DrTemplateData& tempbody_view_data)
 	tempbody_tmp_stream << "<a class=\"nav-link\" aria-current=\"page\" href=\"/idea/newidea\">新規アイデア</a>\n";
 	tempbody_tmp_stream << "</li>\n";
 	tempbody_tmp_stream << "<li class=\"nav-item\">\n";
-	tempbody_tmp_stream << "<a class=\"nav-link\" aria-current=\"page\" href=\"dojin\">同人誌進捗管理</a>\n";
+	tempbody_tmp_stream << "<a class=\"nav-link\" aria-current=\"page\" href=\"/dojin/\">同人誌進捗管理</a>\n";
 	tempbody_tmp_stream << "</li>\n";
 	tempbody_tmp_stream << "</ul>\n";
 	tempbody_tmp_stream << "</div>\n";

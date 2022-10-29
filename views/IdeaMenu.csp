@@ -14,9 +14,7 @@
 </div>
 <div class="mb-3">
 <label class="form-label">内容:</label>
-</div>
-<div class="mb-3">
-<textarea name="idea_explain" rows="7" cols="20">[[explain]]</textarea>
+<textarea name="idea_explain" rows="7" cols="20" style="vertical-align:top;">[[explain]]</textarea>
 </div>
 <div class="mb-3">
 <label class="form-label">締切:</label>

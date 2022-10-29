@@ -53,9 +53,7 @@ IdeaMenu_tmp_stream<<"\n";
 	IdeaMenu_tmp_stream << "</div>\n";
 	IdeaMenu_tmp_stream << "<div class=\"mb-3\">\n";
 	IdeaMenu_tmp_stream << "<label class=\"form-label\">内容:</label>\n";
-	IdeaMenu_tmp_stream << "</div>\n";
-	IdeaMenu_tmp_stream << "<div class=\"mb-3\">\n";
-	IdeaMenu_tmp_stream << "<textarea name=\"idea_explain\" rows=\"7\" cols=\"20\">";
+	IdeaMenu_tmp_stream << "<textarea name=\"idea_explain\" rows=\"7\" cols=\"20\" style=\"vertical-align:top;\">";
 {
     auto & val=IdeaMenu_view_data["explain"];
     if(val.type()==typeid(const char *)){

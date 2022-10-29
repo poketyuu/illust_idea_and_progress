@@ -22,6 +22,8 @@ auto states = @@.get<std::map<int,std::string>>("state");
 <div style="z-index: 1; position: relative;">
 <form action="changestate" method="GET">
 <input type="hidden" name="progress_iid" value="<%c++ $$<<idea["ideaid"];%>">
+<div class="row">
+<div class="col-auto">
 <select class="form-select" name="progress_turn" onchange="SelectChange('button_<%c++ $$<<idea["ideaid"];%>')">
 <%c++ for(const auto& [turn,context]:states){%>
 <%c++ if(turn == -1) continue;%>
@@ -33,7 +35,11 @@ auto states = @@.get<std::map<int,std::string>>("state");
 <%c++ }%>
 <option value="-1">完成</option>
 </select>
-<button class="btn-primary" id="button_<%c++ $$<<idea["ideaid"];%>" type="submit" disabled>変更</button>
+</div>
+<div class="col-auto">
+<button class="btn-light" id="button_<%c++ $$<<idea["ideaid"];%>" type="submit" disabled>変更</button>
+</div>
+</div>
 </form>
 </div>
 </div>
