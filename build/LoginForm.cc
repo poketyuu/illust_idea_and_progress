@@ -27,6 +27,7 @@ std::string LoginForm::genText(const DrTemplateData& LoginForm_view_data)
 LoginForm_tmp_stream<<"\n";
 	LoginForm_tmp_stream << "<body class=\"text-center\">\n";
 	LoginForm_tmp_stream << "<main class=\"form-signin\">\n";
+	LoginForm_tmp_stream << "<h2>アカウントをお持ちの方は</h2>\n";
 	LoginForm_tmp_stream << "<form action=\"login\" method=\"POST\">\n";
 	LoginForm_tmp_stream << "<div class=\"form-floating\">\n";
 	LoginForm_tmp_stream << "<input type=\"text\" name=\"id\" placeholder=\"ID\" required>\n";
@@ -35,7 +36,7 @@ LoginForm_tmp_stream<<"\n";
 	LoginForm_tmp_stream << "<input type=\"password\" name=\"password\" placeholder=\"パスワード\" required>\n";
 	LoginForm_tmp_stream << "</div>\n";
 	LoginForm_tmp_stream << "<div class=\"mb-3\">\n";
-	LoginForm_tmp_stream << "<p>";
+	LoginForm_tmp_stream << "<p class=\"text-danger\">";
 {
     auto & val=LoginForm_view_data["message"];
     if(val.type()==typeid(const char *)){
@@ -48,6 +49,8 @@ LoginForm_tmp_stream<<"\n";
 	LoginForm_tmp_stream << "</div>\n";
 	LoginForm_tmp_stream << "<button class=\"btn btn-lg btn-primary\" type=\"submit\">サインイン</button>\n";
 	LoginForm_tmp_stream << "</form>\n";
+	LoginForm_tmp_stream << "<h4>or</h4>\n";
+	LoginForm_tmp_stream << "<h2>アカウントをお持ちでない方は</h2>\n";
 	LoginForm_tmp_stream << "<a role=\"button\" class=\"btn btn-lg btn-primary\" href=\"newUser\">新規登録</a>\n";
 	LoginForm_tmp_stream << "</main>\n";
 	LoginForm_tmp_stream << "<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p\" crossorigin=\"anonymous\"></script>\n";

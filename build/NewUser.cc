@@ -43,7 +43,7 @@ NewUser_tmp_stream<<"\n";
 	NewUser_tmp_stream << "<input type=\"password\" name=\"pass_validation\" required>\n";
 	NewUser_tmp_stream << "</div>\n";
 	NewUser_tmp_stream << "<div class=\"mb-3\">\n";
-	NewUser_tmp_stream << "<label>";
+	NewUser_tmp_stream << "<label class=\"text-danger\">";
 {
     auto & val=NewUser_view_data["message"];
     if(val.type()==typeid(const char *)){

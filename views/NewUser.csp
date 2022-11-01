@@ -18,7 +18,7 @@
 <input type="password" name="pass_validation" required>
 </div>
 <div class="mb-3">
-<label>[[message]]</label>
+<label class="text-danger">[[message]]</label>
 </div>
 <button class="btn btn-lg btn-primary" type="submit">登録</button>
 </div>
