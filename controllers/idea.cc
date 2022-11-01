@@ -1,6 +1,8 @@
 #include "idea.h"
 #include "IdeaClass.h"
 #include <regex>
+#include <time.h>
+#include <stdio.h>
 #define ID "loginUser"
 
 // Add definition of your processing function here
@@ -81,7 +83,6 @@ void idea::AddIdea(const HttpRequestPtr &req, std::function<void(const HttpRespo
     try{
         auto para = req->getParameters();
         auto userID = req->session()->get<std::string>(ID);
-        std::cout << userID << std::endl;
         auto DBclient = drogon::app().getDbClient("default");
         auto GetIidMaxSql = DBclient->execSqlAsyncFuture("SELECT iid from idea where id = $1 order by iid desc", userID).get();
         int NewIid = 0;
@@ -91,10 +92,8 @@ void idea::AddIdea(const HttpRequestPtr &req, std::function<void(const HttpRespo
         }
         NewIid++;
         std::string deadline = para["idea_deadline"];
-        std::cout << NewIid << std::endl;
         if (deadline.empty())
         {
-            std::cout << IdeaAddSQL(userID, NewIid, false) << std::endl;
             auto result = DBclient->execSqlAsyncFuture(IdeaAddSQL(userID, NewIid, false),
                                                        para["idea_chara"], para["idea_explain"]).get();
         }
@@ -103,9 +102,7 @@ void idea::AddIdea(const HttpRequestPtr &req, std::function<void(const HttpRespo
             auto result = DBclient->execSqlAsyncFuture(IdeaAddSQL(userID,NewIid,true),
             para["idea_chara"],para["idea_explain"],deadline).get();
         }
-        std::cout << "idea" << std::endl;
         auto progress = DBclient->execSqlAsyncFuture("INSERT into progress values($1,$2,0)", userID, NewIid).get();
-        std::cout << "progress" << std::endl;
     }
     catch (const std::exception &e)
     {
@@ -118,7 +115,6 @@ void idea::AddIdea(const HttpRequestPtr &req, std::function<void(const HttpRespo
 }
 void idea::ideaInfo(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback,int Ideaid) const
 {
-    std::cout << "info:"<< Ideaid << std::endl;
     try
     {
         auto userID = req->session()->get<std::string>(ID);
@@ -216,7 +212,7 @@ std::string idea::IdeaListSQL() const
 std::string idea::StateListSQL() const{
     return std::string("select * from state where id = $1 order by turn desc");
 }
-std::string idea::IdeaAddSQL(std::string UserID,int IdeaID,bool deadlineExist)const
+std::string idea::IdeaAddSQL(std::string UserID,int IdeaID,bool deadlineExist) const
 {
     std::string newSQL;
     if(deadlineExist){
@@ -224,7 +220,7 @@ std::string idea::IdeaAddSQL(std::string UserID,int IdeaID,bool deadlineExist)co
     }
     else
     {
-        newSQL=std::string("insert into idea values('" +UserID + "'," + std::to_string(IdeaID) + ",$1,$2,'"+TMtoSQLdata()+ "',NULL)");
+        newSQL = std::string("insert into idea values('" + UserID + "'," + std::to_string(IdeaID) + ",$1,$2,'" + TMtoSQLdata() + "',NULL)");
     }
     return newSQL;
 }
@@ -272,10 +268,10 @@ std::tm idea::TMFromSQLdata(std::string datastring) const
 }
 std::string idea::TMtoSQLdata() const
 {
-    std::time_t timenow = time(nullptr);
-    struct tm *local;
-    localtime_r(&timenow, local);
+    std::time_t timenow = time(NULL);
+    struct tm local;
+    auto lt = localtime_r(&timenow, &local);
     char buf[128];
-    strftime(buf, sizeof(buf), R"(%Y-%m-%d)", local);
+    strftime(buf, sizeof(buf), R"(%Y-%m-%d)", &local);
     return std::string(buf);
 }
