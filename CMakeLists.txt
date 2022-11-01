@@ -30,6 +30,9 @@ add_executable(${PROJECT_NAME} main.cc)
 # and comment out the following lines
 find_package(Drogon CONFIG REQUIRED)
 target_link_libraries(${PROJECT_NAME} PRIVATE Drogon::Drogon)
+include_directories(/usr/local/include)
+link_directories(/usr/local/lib)
+target_link_libraries(${PROJECT_NAME} PUBLIC crypto ssl)
 
 # ##############################################################################
 
@@ -70,7 +73,7 @@ target_sources(${PROJECT_NAME}
                ${PLUGIN_SRC}
                ${MODEL_SRC})
 # ##############################################################################
-# uncomment the following line for dynamically loading views 
+# uncomment the following line for dynamically loading views
 # set_property(TARGET ${PROJECT_NAME} PROPERTY ENABLE_EXPORTS ON)
 
 # ##############################################################################

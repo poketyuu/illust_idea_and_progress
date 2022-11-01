@@ -26,13 +26,29 @@ std::string LoginForm::genText(const DrTemplateData& LoginForm_view_data)
 }
 LoginForm_tmp_stream<<"\n";
 	LoginForm_tmp_stream << "<body class=\"text-center\">\n";
-	LoginForm_tmp_stream << "<main>\n";
+	LoginForm_tmp_stream << "<main class=\"form-signin\">\n";
 	LoginForm_tmp_stream << "<form action=\"login\" method=\"POST\">\n";
 	LoginForm_tmp_stream << "<div class=\"form-floating\">\n";
-	LoginForm_tmp_stream << "<input type=\"text\" name=\"id\" />\n";
-	LoginForm_tmp_stream << "<button class=\"w-100 btn btn-lg btn-primary\" type=\"submit\">Sign in</button>\n";
+	LoginForm_tmp_stream << "<input type=\"text\" name=\"id\" placeholder=\"ID\" required>\n";
 	LoginForm_tmp_stream << "</div>\n";
+	LoginForm_tmp_stream << "<div class=\"form-floating\">\n";
+	LoginForm_tmp_stream << "<input type=\"password\" name=\"password\" placeholder=\"パスワード\" required>\n";
+	LoginForm_tmp_stream << "</div>\n";
+	LoginForm_tmp_stream << "<div class=\"mb-3\">\n";
+	LoginForm_tmp_stream << "<p>";
+{
+    auto & val=LoginForm_view_data["message"];
+    if(val.type()==typeid(const char *)){
+        LoginForm_tmp_stream<<*any_cast<const char *>(&val);
+    }else if(val.type()==typeid(std::string)||val.type()==typeid(const std::string)){
+        LoginForm_tmp_stream<<*any_cast<const std::string>(&val);
+    }
+}
+	LoginForm_tmp_stream << "</p>\n";
+	LoginForm_tmp_stream << "</div>\n";
+	LoginForm_tmp_stream << "<button class=\"btn btn-lg btn-primary\" type=\"submit\">サインイン</button>\n";
 	LoginForm_tmp_stream << "</form>\n";
+	LoginForm_tmp_stream << "<a role=\"button\" class=\"btn btn-lg btn-primary\" href=\"newUser\">新規登録</a>\n";
 	LoginForm_tmp_stream << "</main>\n";
 	LoginForm_tmp_stream << "<script src=\"https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js\" integrity=\"sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p\" crossorigin=\"anonymous\"></script>\n";
 	LoginForm_tmp_stream << "</body>\n";

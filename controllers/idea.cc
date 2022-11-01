@@ -81,8 +81,14 @@ void idea::AddIdea(const HttpRequestPtr &req, std::function<void(const HttpRespo
     try{
         auto para = req->getParameters();
         auto userID = req->session()->get<std::string>(ID);
+        std::cout << userID << std::endl;
         auto DBclient = drogon::app().getDbClient("default");
-        auto NewIid = DBclient->execSqlAsyncFuture("SELECT iid from idea where id = $1 order by iid desc", userID).get()[0]["iid"].as<int>();
+        auto GetIidMaxSql = DBclient->execSqlAsyncFuture("SELECT iid from idea where id = $1 order by iid desc", userID).get();
+        int NewIid = 0;
+        if (GetIidMaxSql.size() != 0)
+        {
+            NewIid = GetIidMaxSql[0]["iid"].as<int>();
+        }
         NewIid++;
         std::string deadline = para["idea_deadline"];
         std::cout << NewIid << std::endl;
@@ -203,7 +209,7 @@ void idea::ChageState(const HttpRequestPtr &req, std::function<void(const HttpRe
     auto res = drogon::HttpResponse::newHttpViewResponse("PageTransition.csp", viewdata);
     callback(res);
 }
-    std::string idea::IdeaListSQL() const
+std::string idea::IdeaListSQL() const
 {
     return std::string("select * from ideaview where id = $1");
 }
