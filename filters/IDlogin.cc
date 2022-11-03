@@ -21,7 +21,7 @@ void IDlogin::doFilter(const HttpRequestPtr &req,
     }
     //Check failed
     auto viewdata = HttpViewData();
-    viewdata.insert("newpage", "/login/");
+    viewdata.insert("newpage", "/login/login");
     auto res = drogon::HttpResponse::newHttpViewResponse("PageTransition.csp",viewdata);
     fcb(res);
 }
