@@ -84,10 +84,10 @@ build/*
 !build/css
 
 #config file
-config.json
+#config.json
 
 ### CMake ###
-CMakeLists.txt
+#CMakeLists.txt
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles
