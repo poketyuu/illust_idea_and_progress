@@ -10,8 +10,18 @@
 <li class="nav-item">
 <a class="nav-link" aria-current="page" href="/idea/newidea">新規アイデア</a>
 </li>
-<li class="nav-item">
-<a class="nav-link" aria-current="page" href="/dojin/">同人誌進捗管理</a>
+<%c++ 
+//<li class="nav-item">
+//<a class="nav-link" aria-current="page" href="/dojin/">同人誌進捗管理</a>
+//</li>
+%>
+</ul>
+<ul class="navbar-nav">
+<li class="nav-item dropdown">
+<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">メニュー</a>
+<ul class="dropdown-menu">
+<li><a class="dropdown-item" href="/login/logout">ログアウト</a></li>
+</ul>
 </li>
 </ul>
 </div>

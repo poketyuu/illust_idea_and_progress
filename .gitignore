@@ -78,7 +78,16 @@ dkms.conf
 
 # Executables
 
+# build file
+build/*
+!build/static_html/
+!build/css
+
+#config file
+config.json
+
 ### CMake ###
+CMakeLists.txt
 CMakeLists.txt.user
 CMakeCache.txt
 CMakeFiles

@@ -33,7 +33,7 @@ void login::logincheck(const HttpRequestPtr &req, std::function<void(const HttpR
         std::cerr << e.what() << '\n';
     }
     auto viewdata = HttpViewData();
-    viewdata.insert("message", "ログイン情報に誤りがあります");
+    viewdata.insert("message", "ユーザーIDまたはパスワードに誤りがあります");
     callback(HttpResponse::newHttpViewResponse("LoginForm.csp",viewdata));
 }
 void login::loginform(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const
@@ -41,6 +41,16 @@ void login::loginform(const HttpRequestPtr &req, std::function<void(const HttpRe
     auto viewdate = HttpViewData();
     viewdate.insert("message", "");
     callback(HttpResponse::newHttpViewResponse("LoginForm.csp",viewdate));
+}
+void login::logout(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const 
+{
+    if(req->session()->find("loginUser")){
+        req->session()->erase("loginUser");
+    }
+    auto viewdata = HttpViewData();
+    viewdata.insert("newpage", "/login/login");
+    auto res = drogon::HttpResponse::newHttpViewResponse("PageTransition.csp", viewdata);
+    callback(res);
 }
 void login::NewUser(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const
 {
@@ -62,7 +72,16 @@ void login::addUser(const HttpRequestPtr &req, std::function<void(const HttpResp
     }
     try
     {
-        //ランダム文字列saltを生成,passと繋げて暗号化ハッシュを作成
+        auto DBclient = drogon::app().getDbClient("default");
+        //IDに被りが存在するか確認
+        auto exist = DBclient->execSqlAsyncFuture("SELECT * FROM illustrator WHERE id = $1", UserID).get();
+        if(exist.size() > 0){
+            auto viewdate = HttpViewData();
+            viewdate.insert("message", "当該IDは既に使用されています");
+            callback(HttpResponse::newHttpViewResponse("NewUser.csp", viewdate));
+            return;
+        }
+        // ランダム文字列saltを生成,passと繋げて暗号化ハッシュを作成
         char salt[LEN+1];
         srandom((unsigned int)time(NULL));
         for (int i = 0; i < LEN; i++)
@@ -79,7 +98,6 @@ void login::addUser(const HttpRequestPtr &req, std::function<void(const HttpResp
         std::string digest = createDigestArray<char>(passsalt.c_str(), static_cast<size_t>(passsalt.length()), passhash);
         std::cout << digest << std::endl;
         //DBにsaltと共に登録
-        auto DBclient = drogon::app().getDbClient("default");
         auto result = DBclient->execSqlAsyncFuture(
             AddUserSQL(digest,std::string(salt)),UserID).get();
         auto addstate = DBclient->execSqlAsyncFuture(
@@ -93,6 +111,10 @@ void login::addUser(const HttpRequestPtr &req, std::function<void(const HttpResp
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
+        auto viewdate = HttpViewData();
+        viewdate.insert("message", "当該IDは既に使用されています");
+        callback(HttpResponse::newHttpViewResponse("NewUser.csp", viewdate));
+        return;
     }
     
 }

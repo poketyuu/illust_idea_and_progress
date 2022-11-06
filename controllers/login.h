@@ -14,6 +14,7 @@ class login : public drogon::HttpController<login>
     // ADD_METHOD_TO(login::your_method_name, "/absolute/path/{1}/{2}/list", Get); // path is /absolute/path/{arg1}/{arg2}/list
     METHOD_ADD(login::loginform, "/login", Get);
     METHOD_ADD(login::logincheck, "/login", Post);
+    METHOD_ADD(login::logout, "/logout", Get);
     METHOD_ADD(login::NewUser, "/newUser", Get);
     METHOD_ADD(login::addUser, "/newUser", Post);
 
@@ -23,6 +24,7 @@ class login : public drogon::HttpController<login>
     // void your_method_name(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, double p1, int p2) const;
     void loginform(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
     void logincheck(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
+    void logout(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
     void NewUser(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
     void addUser(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
     std::string LoginSQL() const;
