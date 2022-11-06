@@ -37,7 +37,7 @@ auto states = @@.get<std::map<int,std::string>>("state");
 </select>
 </div>
 <div class="col-auto">
-<button class="btn-light" id="button_<%c++ $$<<idea["ideaid"];%>" type="submit" disabled>変更</button>
+<button class="btn btn-outline-dark" id="button_<%c++ $$<<idea["ideaid"];%>" type="submit" disabled>変更</button>
 </div>
 </div>
 </form>

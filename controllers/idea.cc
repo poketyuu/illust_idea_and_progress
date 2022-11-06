@@ -207,7 +207,7 @@ void idea::ChageState(const HttpRequestPtr &req, std::function<void(const HttpRe
 }
 std::string idea::IdeaListSQL() const
 {
-    return std::string("select * from ideaview where id = $1");
+    return std::string("select * from ideaview where id = $1 order by turn desc, deadline,iid");
 }
 std::string idea::StateListSQL() const{
     return std::string("select * from state where id = $1 order by turn desc");
