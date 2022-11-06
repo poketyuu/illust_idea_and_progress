@@ -7,7 +7,7 @@ auto states = @@.get<std::map<int,std::string>>("state");
 <body>
 <%view tempbody%>
 <main>
-<div class="container-fluid">
+<div class="container-fluid bg-secondary bg-opacity-10">
 <div class="container px-4 py-5">
 <%c++ for(auto ideacard:ideas){%>
 <h2 class="pb-2 border-bottom text-center"><%c++ $$<<states.at(ideacard.first);%></h2>
@@ -17,7 +17,7 @@ auto states = @@.get<std::map<int,std::string>>("state");
 <div class=<%c++ $$<<idea["cardtype"];%>>
 <div class="card-body">
 <a class="stretched-link" href=<%c++ $$<<idea["cardLink"];%>></a>
-<h2 class="card-title"><%c++ $$<<idea["title"];%></h2>
+<h2 class="card-title"><%c++ $$<<idea["chara"];%></h2>
 <p class="card-text"><%c++ $$<<idea["explain"];%></p>
 <div style="z-index: 1; position: relative;">
 <form action="changestate" method="GET">
