@@ -53,7 +53,7 @@ void idea::get(const HttpRequestPtr &req, std::function<void(const HttpResponseP
                 }
             }
             stepidea.push_back(std::unordered_map<std::string, std::string>
-            {{"title", row["title"].as<std::string>()},
+            {{"chara", row["chara"].as<std::string>()},
              {"explain", row["explain"].as<std::string>()}, 
              {"deadline", deadline},
              {"cardtype",cardtype},
@@ -95,12 +95,12 @@ void idea::AddIdea(const HttpRequestPtr &req, std::function<void(const HttpRespo
         if (deadline.empty())
         {
             auto result = DBclient->execSqlAsyncFuture(IdeaAddSQL(userID, NewIid, false),
-                                                       para["idea_title"], para["idea_explain"]).get();
+                                                       para["idea_chara"], para["idea_explain"]).get();
         }
         else
         {
             auto result = DBclient->execSqlAsyncFuture(IdeaAddSQL(userID,NewIid,true),
-            para["idea_title"],para["idea_explain"],deadline).get();
+            para["idea_chara"],para["idea_explain"],deadline).get();
         }
         auto progress = DBclient->execSqlAsyncFuture("INSERT into progress values($1,$2,0)", userID, NewIid).get();
     }
@@ -121,7 +121,7 @@ void idea::ideaInfo(const HttpRequestPtr &req, std::function<void(const HttpResp
         auto DBclient = drogon::app().getDbClient("default");
         auto result = DBclient->execSqlAsyncFuture("SELECT * FROM idea WHERE id = $1 AND iid = $2", userID, Ideaid).get();
         auto viewdata = HttpViewData();
-        viewdata.insert("title", result[0]["title"].as<std::string>());
+        viewdata.insert("title", result[0]["chara"].as<std::string>());
         viewdata.insert("explain", result[0]["explain"].as<std::string>());
         viewdata.insert("deadline", result[0]["deadline"].as<std::string>());
         viewdata.insert("today", TMtoSQLdata());
@@ -148,13 +148,13 @@ void idea::EditIdea(const HttpRequestPtr &req, std::function<void(const HttpResp
         if (deadline.empty())
         {
             auto result = DBclient->execSqlAsyncFuture(IdeaEditSQL(UserID, Ideaid, false),
-                                                       para["idea_title"], para["idea_explain"])
+                                                       para["idea_chara"], para["idea_explain"])
                               .get();
         }
         else
         {
             auto result = DBclient->execSqlAsyncFuture(IdeaEditSQL(UserID, Ideaid, true),
-                                                       para["idea_title"], para["idea_explain"], deadline)
+                                                       para["idea_chara"], para["idea_explain"], deadline)
                               .get();
         }
     }
@@ -229,11 +229,11 @@ std::string idea::IdeaEditSQL(std::string UserID, int IdeaID, bool deadlineExist
     std::string newSQL;
     if (deadlineExist)
     {
-        newSQL = std::string("update idea set title = $1,explain = $2,deadline = $3 where id = '" + UserID + "' and iid = " + std::to_string(IdeaID));
+        newSQL = std::string("update idea set chara = $1,explain = $2,deadline = $3 where id = '" + UserID + "' and iid = " + std::to_string(IdeaID));
     }
     else
     {
-        newSQL = std::string("update idea set title = $1,explain = $2,deadline = NULL where id = '" + UserID + "' and iid = " + std::to_string(IdeaID));
+        newSQL = std::string("update idea set chara = $1,explain = $2,deadline = NULL where id = '" + UserID + "' and iid = " + std::to_string(IdeaID));
     }
     return newSQL;
 }
