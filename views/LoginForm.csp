@@ -19,6 +19,7 @@ body {padding-top: 50px;}
 </header>
 <main class="form-signin w-100 m-auto">
 <form action="login" method="POST">
+<h1 class="h3 mb-3 fw-normal">Login</h1>
 <div class="form-floating">
 <input type="text" name="id" class="form-control" placeholder="ID" id="InputID" required>
 <label for="InputID">ID</label>
@@ -30,7 +31,7 @@ body {padding-top: 50px;}
 <div class="mb-3">
 <p class="text-danger">[[message]]</p>
 </div>
-<button class="w-100 btn btn-lg btn-primary" type="submit">サインイン</button>
+<button class="w-100 btn btn-lg btn-primary" type="submit">ログイン</button>
 <h4>or</h4>
 <button class="w-100 btn btn-lg btn-primary" type="button" onclick="location.href='newUser'">新規登録</button>
 </form>

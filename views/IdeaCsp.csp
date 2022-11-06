@@ -4,10 +4,10 @@ auto ideas = @@.get<std::vector<std::pair<int,std::vector<std::unordered_map<std
 auto states = @@.get<std::map<int,std::string>>("state");
 %>
 <%view temphead%>
-<body style="height:100vh;">
+<body>
 <%view tempbody%>
-<main style="height:100%">
-<div class="container-fluid bg-secondary bg-opacity-10" style="height:100%">
+<main>
+<div class="container-fluid">
 <div class="container px-4 py-5">
 <%c++ for(auto ideacard:ideas){%>
 <h2 class="pb-2 border-bottom text-center"><%c++ $$<<states.at(ideacard.first);%></h2>
