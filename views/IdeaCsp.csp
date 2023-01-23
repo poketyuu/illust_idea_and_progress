@@ -1,9 +1,12 @@
 <!DOCTYPE HTML>
+<html lang="ja">
+<head>
 <%c++
 auto ideas = @@.get<std::vector<std::pair<int,std::vector<std::unordered_map<std::string,std::string>>>>>("idea");
 auto states = @@.get<std::map<int,std::string>>("state");
 %>
 <%view temphead%>
+</head>
 <body>
 <%view tempbody%>
 <main>
@@ -11,7 +14,7 @@ auto states = @@.get<std::map<int,std::string>>("state");
 <div class="container px-4 py-5">
 <%c++ for(auto ideacard:ideas){%>
 <h2 class="pb-2 border-bottom text-center"><%c++ $$<<states.at(ideacard.first);%></h2>
-<div class="row g-4 py-5 row-cols-1 row-cols-md-3 g-4">
+<div class="row g-4 py-5 row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
 <%c++ for(auto idea:ideacard.second){%>
 <div class="col">
 <div class=<%c++ $$<<idea["cardtype"];%>>
@@ -32,8 +35,14 @@ auto states = @@.get<std::map<int,std::string>>("state");
 <%c++ }else{%>
 <option value="{% turn %}">{% context%}</option>
 <%c++ }%>
-<%c++ }%>
+<%c++ 
+}
+if(ideacard.first == -1){
+%>
+<option value="-1" selected>完成</option>
+<%c++ }else{%>
 <option value="-1">完成</option>
+<%c++ }%>
 </select>
 </div>
 <div class="col-auto">

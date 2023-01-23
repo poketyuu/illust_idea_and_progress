@@ -15,6 +15,7 @@ class idea : public drogon::HttpController<idea>
     METHOD_ADD(idea::get, "/", Get,"IDlogin"); // path is /idea/{arg2}/{arg1}
     METHOD_ADD(idea::newidea, "/newidea", Get, "IDlogin");
     METHOD_ADD(idea::ideaInfo, "/{1}/ideainfo", Get, "IDlogin");
+    METHOD_ADD(idea::edit, "{1}/edit", Get, "IDlogin");
     METHOD_ADD(idea::AddIdea, "/AddIdea", Post, "IDlogin");
     METHOD_ADD(idea::EditIdea, "/{1}/EditIdea", Post, "IDlogin");
     METHOD_ADD(idea::DeleteIdea, "/{1}/DeleteIdea", Get, "IDlogin");
@@ -27,6 +28,7 @@ class idea : public drogon::HttpController<idea>
     void get(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);
     void newidea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
     void ideaInfo(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const;
+    void edit(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const;
     void AddIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
     void EditIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const;
     void DeleteIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const;

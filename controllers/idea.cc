@@ -26,7 +26,8 @@ void idea::get(const HttpRequestPtr &req, std::function<void(const HttpResponseP
             int turn = row["turn"].as<int>();
             if (turnCheck != turn)
             {
-                if(!firstcheck||turn<0)
+                if(turn < 0) break;
+                if(!firstcheck)
                     IdeaList.push_back(std::pair<int,
                                                  std::vector<std::unordered_map<std::string, std::string>>>{turnCheck, stepidea});
                 stepidea.clear();
@@ -136,6 +137,29 @@ void idea::ideaInfo(const HttpRequestPtr &req, std::function<void(const HttpResp
         callback(res);
     }
     
+}
+void idea::edit(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const
+{
+    try
+    {
+        auto userID = req->session()->get<std::string>(ID);
+        auto DBclient = drogon::app().getDbClient("default");
+        auto result = DBclient->execSqlAsyncFuture("SELECT * FROM idea WHERE id = $1 AND iid = $2", userID, Ideaid).get();
+        auto viewdata = HttpViewData();
+        viewdata.insert("title", result[0]["title"].as<std::string>());
+        viewdata.insert("explain", result[0]["explain"].as<std::string>());
+        viewdata.insert("deadline", result[0]["deadline"].as<std::string>());
+        viewdata.insert("today", TMtoSQLdata());
+        callback(drogon::HttpResponse::newHttpViewResponse("ideaEdit.csp", viewdata));
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+        auto viewdata = HttpViewData();
+        viewdata.insert("newpage", "/idea/");
+        auto res = drogon::HttpResponse::newHttpViewResponse("PageTransition.csp", viewdata);
+        callback(res);
+    }
 }
 void idea::EditIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const
 {
