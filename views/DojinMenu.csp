@@ -1,0 +1,167 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+<%c++
+auto pagedata = @@.get<std::vector<std::unordered_map<std::string,std::any>>>("pagedata");
+auto pagenum = @@.get<int>("pagenum");
+auto states = @@.get<std::map<int,std::string>>("state");
+%>
+<%view temphead%>
+<link rel="stylesheet" href="\css\dojinpage.css">
+</head>
+<body>
+<%view tempbody%>
+<main>
+<div class = "container-fluid py-5">
+<div class = "row">
+<h1>[[ title ]]</h1>
+<h2>締切:[[ deadline ]]</h2>
+</div>
+<div class="row py-5">
+<%c++ 
+for(int pagenumber=0;pagenumber<pagenum;pagenumber+=2){ 
+    int rnum,lnum;
+    if(pagenumber==0){
+        rnum=1;
+        lnum=0;
+    }else{
+        rnum=pagenumber;
+        lnum=pagenumber+1;
+    }
+    auto leftpage=pagedata[lnum];
+    auto rightpage = pagedata[rnum];
+    if(std::any_cast<bool>(rightpage["double"])){
+    %>
+<div class="col-12 col-md-6 col-lg-4 col-double">
+<div class="card">
+<div class="card-body">
+<%c++ if(rightpage.find("title") != rightpage.end()){%>
+<h2 class="card-title"><%c++ $$<<std::any_cast<std::string>(rightpage["title"]);%></h2>
+<%c++ 
+if(rightpage.find("turn") != rightpage.end()){
+    int order = std::any_cast<int>(rightpage["turn"]);
+%>
+<a class="stretched-link" href="/idea/<%c++ $$<<std::any_cast<std::string>(rightpage["iid"]);%>/ideainfo"></a>
+<p class="card-text">state:<%c++ $$<<states.at(order);;%></p>
+<div style="z-index: 1; position: relative;">
+<form method="POST">
+<input type="hidden" name="page_num" value = "<%c++ $$<<pagenumber;%>">
+<%c++ if(order==-1){
+    if(std::any_cast<bool>(rightpage["comp"])){%>
+<button class="btn-primary" type="submit" disabled>完成済</button>
+<%c++ }else{%>
+<button class="btn-primary" type="submit">完成</button>
+<%c++ }
+}else{%>
+<button class="btn-danger" type="submit" disabled>未完成</button>
+<%c++ 
+}
+%>
+<button class="btn-danger">削除</button>
+</div>
+<%c++ }else{%>
+<div style="z-index: 1; position: relative;">
+<button class="btn-danger">削除</button>
+</div>
+<%c++ }}else{%>
+<button class="byn-primary">アイデアを追加</button>
+<button class="byn-secondary">イラスト無しページを追加</button>
+<%c++ }%>
+</div>
+<div class="card-footer text-muted">
+<%c++ $$<< pagenumber;%>-<%c++ $$<<pagenumber+1;%>
+</div>
+</div>
+</div>
+<%c++ }else{%>
+<div class="col-6 col-md-3 col-lg-2 col-left">
+<div class="card">
+<div class="card-body">
+<%c++ if(leftpage.find("title") != leftpage.end()){%>
+<h2 class="card-title"><%c++ $$<<std::any_cast<std::string>(leftpage["title"]);%></h2>
+<%c++ 
+if(leftpage.find("turn") != leftpage.end()){
+    int order = std::any_cast<int>(leftpage["turn"]);
+%>
+<a class="stretched-link" href="/idea/<%c++ $$<<std::any_cast<std::string>(leftpage["iid"]);%>/ideainfo"></a>
+<p class="card-text">state:<%c++ $$<<states.at(order);;%></p>
+<div style="z-index: 1; position: relative;">
+<form method="POST">
+<input type="hidden" name="page_num" value = "<%c++ $$<<pagenumber;%>">
+<%c++ if(order==-1){
+    if(std::any_cast<bool>(leftpage["comp"])){%>
+<button class="btn-primary" type="submit" disabled>完成済</button>
+<%c++ }else{%>
+<button class="btn-primary" type="submit">完成</button>
+<%c++ }
+}else{%>
+<button class="btn-danger" type="submit" disabled>未完成</button>
+<%c++ 
+}
+%>
+<button class="btn-danger">削除</button>
+</div>
+<%c++ }else{%>
+<div style="z-index: 1; position: relative;">
+<button class="btn-danger">削除</button>
+</div>
+<%c++ }}else{%>
+<button class="byn-primary">アイデアを追加</button>
+<button class="byn-secondary">イラスト無しページを追加</button>
+<%c++ }%>
+</div>
+<div class="card-footer text-muted">
+<%c++ $$<< ((lnum==0)?pagenum:lnum);%>
+</div>
+</div>
+</div>
+<div class="col-6 col-md-3 col-lg-2 col-right">
+<div class="card">
+<div class="card-body">
+<%c++ if(rightpage.find("title") != rightpage.end()){%>
+<h2 class="card-title"><%c++ $$<<std::any_cast<std::string>(rightpage["title"]);%></h2>
+<%c++ 
+if(rightpage.find("turn") != rightpage.end()){
+    int order = std::any_cast<int>(rightpage["turn"]);
+%>
+<a class="stretched-link" href="/idea/<%c++ $$<<std::any_cast<std::string>(rightpage["iid"]);%>/ideainfo"></a>
+<p class="card-text">state:<%c++ $$<<states.at(order);;%></p>
+<div style="z-index: 1; position: relative;">
+<form method="POST">
+<input type="hidden" name="page_num" value = "<%c++ $$<<pagenumber;%>">
+<%c++ if(order==-1){
+    if(std::any_cast<bool>(rightpage["comp"])){%>
+<button class="btn-primary" type="submit" disabled>完成済</button>
+<%c++ }else{%>
+<button class="btn-primary" type="submit">完成</button>
+<%c++ }
+}else{%>
+<button class="btn-danger" type="submit" disabled>未完成</button>
+<%c++ 
+}
+%>
+<button class="btn-danger">削除</button>
+</div>
+<%c++ }else{%>
+<div style="z-index: 1; position: relative;">
+<button class="btn-danger">削除</button>
+</div>
+<%c++ }}else{%>
+<button class="byn-primary">アイデアを追加</button>
+<button class="byn-secondary">イラスト無しページを追加</button>
+<%c++ }%>
+</div>
+<div class="card-footer text-muted">
+<%c++ $$<< rnum;%>
+</div>
+</div>
+</div>
+<%c++ }%>
+<%c++ 
+}%>
+</div>
+</div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+html,
+.card{
+    text-align: center;
+    margin-top: 10pt;
+}
+.col-right{
+    padding-left: 0px;
+    padding-right: 30px;
+}
+.col-left{
+    padding-left: 30px;
+    padding-right: 0px;
+}
+.col-double{
+    padding-left: 30px;
+    padding-right: 30px;
+}
