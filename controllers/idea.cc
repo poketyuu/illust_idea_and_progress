@@ -21,7 +21,7 @@ void idea::get(const HttpRequestPtr &req, std::function<void(const HttpResponseP
         std::vector<std::unordered_map<std::string, std::string>> stepidea;
         for (auto row : result)
         {
-            std::string cardtype = R"("card border-secondory mb-3 h-100")";
+            std::string cardtype = R"("card card-nolimit")";
             std::string cardLink = std::string("\""+row["iid"].as<std::string>()+"/ideainfo\"");
             int turn = row["turn"].as<int>();
             if (turnCheck != turn)
@@ -40,15 +40,15 @@ void idea::get(const HttpRequestPtr &req, std::function<void(const HttpResponseP
                 std::tm dltm = TMFromSQLdata(deadline);
                 std::time_t dlt = std::mktime(&dltm);
                 if(dlt < timenow){
-                    cardtype = R"("card text-white bg-dark bg-opacity-75 mb-3 h-100")";
+                    cardtype = R"("card card-out")";
                 }else{
                     if(dlt-timenow < 60*60*24*7){
-                        cardtype = R"("card text-white bg-danger mb-3 h-100")";
+                        cardtype = R"("card card-1week")";
                     }else if (dlt-timenow < 60*60*24*30)
                     {
-                        cardtype = R"("card text-dark bg-warning bg-opacity-50 mb-3 h-100")";
+                        cardtype = R"("card card-1month")";
                     }else{
-                        cardtype = R"("card text-dark bg-info bg-opacity-25 mb-3 h-100")";
+                        cardtype = R"("card card-limit")";
                     }
                     
                 }

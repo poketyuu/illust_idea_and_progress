@@ -14,7 +14,7 @@ auto states = @@.get<std::map<int,std::string>>("state");
 <div class="container px-4 py-5">
 <%c++ for(auto ideacard:ideas){%>
 <h2 class="pb-2 border-bottom text-center"><%c++ $$<<states.at(ideacard.first);%></h2>
-<div class="row g-4 py-5 row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+<div class="row row-idea g-4 py-5 row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
 <%c++ for(auto idea:ideacard.second){%>
 <div class="col">
 <div class=<%c++ $$<<idea["cardtype"];%>>
@@ -22,7 +22,7 @@ auto states = @@.get<std::map<int,std::string>>("state");
 <a class="stretched-link" href=<%c++ $$<<idea["cardLink"];%>></a>
 <h2 class="card-title"><%c++ $$<<idea["title"];%></h2>
 <p class="card-text"><%c++ $$<<idea["explain"];%></p>
-<div style="z-index: 1; position: relative;">
+<div class="card-onselect">
 <form action="changestate" method="GET">
 <input type="hidden" name="progress_iid" value="<%c++ $$<<idea["ideaid"];%>">
 <div class="row">
