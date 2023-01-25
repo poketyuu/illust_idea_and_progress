@@ -5,13 +5,14 @@
 //auto InDojinshi = @@.get<bool>("InDojinshi");
 %>
 <%view temphead%>
+<link rel="stylesheet" href="/css/IdeaMenu.css">
 </head>
 <body>
 <%view tempbody%>
 <main>
 <div class="container px-2 py-5">
 <h1>[[title]]</h1>
-[[explain]]
+<p class="text-br">[[explain]]</p>
 <h5>締切:[[deadline]]</h5>
 <div class="mb-3">
 <a role="button" class="btn btn-success" href="edit">編集</a>

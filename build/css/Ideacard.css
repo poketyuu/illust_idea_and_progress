@@ -17,6 +17,10 @@ body {
 .card .card-body{
     height: 12rem;
     position: relative;
+    
+}
+.card-text-br{
+    white-space: pre-wrap;
 }
 .card-onselect{
     z-index: 1;

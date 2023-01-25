@@ -6,6 +6,7 @@ auto ideas = @@.get<std::vector<std::pair<int,std::vector<std::unordered_map<std
 auto states = @@.get<std::map<int,std::string>>("state");
 %>
 <%view temphead%>
+<link rel="stylesheet" href="/css/Ideacard.css">
 </head>
 <body>
 <%view tempbody%>
@@ -21,7 +22,7 @@ auto states = @@.get<std::map<int,std::string>>("state");
 <div class="card-body">
 <a class="stretched-link" href=<%c++ $$<<idea["cardLink"];%>></a>
 <h2 class="card-title"><%c++ $$<<idea["title"];%></h2>
-<p class="card-text"><%c++ $$<<idea["explain"];%></p>
+<p class="card-text card-text-br"><%c++ $$<<idea["explain"];%></p>
 <div class="card-onselect">
 <form action="changestate" method="GET">
 <input type="hidden" name="progress_iid" value="<%c++ $$<<idea["ideaid"];%>">
