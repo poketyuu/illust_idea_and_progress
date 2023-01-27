@@ -229,6 +229,71 @@ void idea::ChageState(const HttpRequestPtr &req, std::function<void(const HttpRe
     auto res = drogon::HttpResponse::newHttpViewResponse("PageTransition.csp", viewdata);
     callback(res);
 }
+void idea::IdeaAll(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const
+{
+    try
+    {
+        auto UserID = req->session()->get<std::string>(ID);
+        auto sort = req->getParameter("sort_by");
+        auto IsComp = (req->getParameter("IsComp")) == "on";
+        auto search = req->getParameter("search");
+        auto result = drogon::app().getDbClient("default")->execSqlAsyncFuture(IdeaAllSQL(search, IsComp, sort), UserID).get();
+        std::vector<std::unordered_map<std::string, std::string>> IdeaList;
+        for (auto row : result)
+        {
+            std::unordered_map<std::string, std::string> IdeaCard;
+            std::string cardtype = R"("card card-nolimit")";
+            std::string cardLink = std::string("\"" + row["iid"].as<std::string>() + "/ideainfo\"");
+            std::string deadline = row["deadline"].as<std::string>();
+            //カードの種類判定(締切からの期間を見る)
+            if (!deadline.empty())
+            {
+                std::time_t timenow = time(nullptr);
+                std::tm dltm = TMFromSQLdata(deadline);
+                std::time_t dlt = std::mktime(&dltm);
+                if (dlt < timenow)
+                {
+                    cardtype = R"("card card-out")";
+                }
+                else
+                {
+                    if (dlt - timenow < 60 * 60 * 24 * 7)
+                    {
+                        cardtype = R"("card card-1week")";
+                    }
+                    else if (dlt - timenow < 60 * 60 * 24 * 30)
+                    {
+                        cardtype = R"("card card-1month")";
+                    }
+                    else
+                    {
+                        cardtype = R"("card card-limit")";
+                    }
+                }
+            }
+            if(row["turn"].as<int>()<0) cardtype = R"("card card-perfect")";
+            IdeaList.push_back(std::unordered_map<std::string, std::string>{
+                {"title", row["title"].as<std::string>()},
+                {"explain", row["explain"].as<std::string>()},
+                {"state",row["context"].as<std::string>()},
+                {"deadline", deadline},
+                {"cardtype", cardtype},
+                {"cardLink", cardLink}
+                });
+        }
+        auto viewData = HttpViewData();
+        viewData.insert("IdeaList", IdeaList);
+        viewData.insert("search", search);
+        viewData.insert("IsComp", IsComp);
+        viewData.insert("sort_by", sort);
+        viewData.insert("state", MakeStateList(UserID));
+        callback(HttpResponse::newHttpViewResponse("IdeaAll.csp", viewData));
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+}
 std::string idea::IdeaListSQL() const
 {
     return std::string("select * from ideaview where id = $1 order by turn desc, deadline,iid");
@@ -260,6 +325,23 @@ std::string idea::IdeaEditSQL(std::string UserID, int IdeaID, bool deadlineExist
         newSQL = std::string("update idea set title = $1,explain = $2,deadline = NULL where id = '" + UserID + "' and iid = " + std::to_string(IdeaID));
     }
     return newSQL;
+}
+std::string idea::IdeaAllSQL(std::string Keyword, bool IsComp, std::string sort_by) const {
+    std::string select = "select * from ideaview where id = $1";
+    std::string order = " order by deadline,iid desc";
+    if (!Keyword.empty())
+    {
+        if(Keyword.find("'") == std::string::npos){
+            select = select + " and title like '%" + Keyword + "%'";
+        }
+    }
+    if(IsComp)
+        select = select + " and turn != -1";
+    if(sort_by =="latest"){
+        order = " order by iid desc";
+    }
+    std::cout << select << std::endl;
+    return select + order;
 }
 std::map<int, std::string> idea::MakeStateList(std::string UserID) const
 {

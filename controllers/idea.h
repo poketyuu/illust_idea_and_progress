@@ -20,6 +20,7 @@ class idea : public drogon::HttpController<idea>
     METHOD_ADD(idea::EditIdea, "/{1}/EditIdea", Post, "IDlogin");
     METHOD_ADD(idea::DeleteIdea, "/{1}/DeleteIdea", Get, "IDlogin");
     METHOD_ADD(idea::ChageState, "/changestate", Get, "IDlogin");
+    METHOD_ADD(idea::IdeaAll, "/All", Get, "IDlogin");
 
     METHOD_LIST_END
     // your declaration of processing function maybe like this:
@@ -33,11 +34,13 @@ class idea : public drogon::HttpController<idea>
     void EditIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const;
     void DeleteIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const;
     void ChageState(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
+    void IdeaAll(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
     std::string IdeaListSQL() const;
     std::string StateListSQL() const;
     std::string IdeaAddSQL(std::string UserID, int Ideaid,bool deadlineExist) const;
     std::string IdeaEditSQL(std::string UserID, int Ideaid, bool deadlineExist) const;
     std::string IdeaDeleteSQL(std::string UserID, int Ideaid) const;
+    std::string IdeaAllSQL(std::string Keyword, bool IsComp, std::string sort_by) const;
     std::map<int, std::string> MakeStateList(std::string UserID) const;
     std::tm TMFromSQLdata(std::string) const;
     std::string TMtoSQLdata() const;
