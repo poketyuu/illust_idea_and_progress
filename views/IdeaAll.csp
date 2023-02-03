@@ -3,12 +3,15 @@
 <head>
 <%c++
 auto search = @@.get<std::string>("search");
-auto IsComp = @@.get<bool>("IsComp");
+auto IsComp = @@.get<std::string>("IsComp");
 auto sort_by = @@.get<std::string>("sort_by");
+auto TagList = @@.get<std::vector<std::string>>("TagList");
+auto tag = @@.get<std::string>("Tag");
 auto IdeaList = @@.get<std::vector<std::unordered_map<std::string,std::string>>>("IdeaList");
 %>
 <%view temphead%>
 <link rel="stylesheet" href = "/css/Ideacard.css">
+<link rel="stylesheet" href = "/css/TagButton.css">
 </head>
 <body>
 <%view tempbody%>
@@ -16,19 +19,61 @@ auto IdeaList = @@.get<std::vector<std::unordered_map<std::string,std::string>>>
 <div class="container-fluid">
 <div class="container px-4 py-5">
 <h2 class="pb-2 border-bottom">アイデア一覧</h2>
-<form class="row justify-content-end" method="GET">
+<form method="GET">
+<div class="row justify-content-start g-1">
+<%c++ 
+for(auto tagcard:TagList){
+    bool IsSelect = (tag==tagcard);
+%>
 <div class="col-auto">
-<input type="search class="form-control" name="search" placeholder="キーワード" value="<%c++ $$<<search;%>" onchange="submit(this.form)">
+<%c++ if(IsSelect){%>
+<input class="btn-check" type="radio" name="tag" id="tag_{% tagcard %}" value="{% tagcard %}" onchange="submit(this.form)" onclick="tag_radiolabel_off('tag_{% tagcard %}',true)" checked>
+<label class="btn tag-selected" for="tag_{% tagcard %}"><%c++ if(tagcard!="未分類") $$<<"#";%>{% tagcard %} <span class="batsu"></span></label>
+<%c++ }else{%>
+<input class="btn-check" type="radio" name="tag" id="tag_{% tagcard %}" value="{% tagcard %}" onchange="submit(this.form)" onclick="tag_radiolabel_off('tag_{% tagcard %}',false)">
+<label class="btn tag-noselect" for="tag_{% tagcard %}"><%c++ if(tagcard!="未分類") $$<<"#";%>{% tagcard %}</label>
+<%c++ }%>
 </div>
-<div class="form-check col-auto align-middle">
-<input class="form-check-input" type="checkbox" id="IsComp" name="IsComp" onchange="submit(this.form)" <%c++ if(IsComp) $$<<"checked";%>>
-<label class="form-check-label" for="IsComp">完成済み非表示</label>
+<%c++ 
+}
+%>
 </div>
-<div class="col-auto align-middle">
+<div class="row row-center g-2">
+<div class="col-auto">
+<label class="align-middle">表示切替 : </label>
+</div>
+<div class="col-auto">
+<input class="btn-check" type="radio" name="IsComp" id="IsCompAll" value="All" onchange="submit(this.form)" checked>
+<label class="btn btn-outline-dark btn-sm" for="IsCompAll">全て</label>
+</div>
+<div class="col-auto">
+<input class="btn-check" type="radio" name="IsComp" id="IsCompTrue" value="True" onchange="submit(this.form)" <%c++ if(IsComp=="True") $$<<"checked";%>>
+<label class="btn btn-outline-dark btn-sm" for="IsCompTrue">完成済</label>
+</div>
+<div class="col-auto">
+<input class="btn-check" type="radio" name="IsComp" id="IsCompFalse" value="False" onchange="submit(this.form)" <%c++ if(IsComp=="False") $$<<"checked";%>>
+<label class="btn btn-outline-dark btn-sm" for="IsCompFalse">未完成</label>
+</div>
+</div>
+<div class="row row-center g-2">
+<div class="col-auto">
+<label class="align-middle">絞り込み : </label>
+</div>
+<div class="col-auto">
+<input type="search" class="form-control" name="search" placeholder="キーワード" value="<%c++ $$<<search;%>" onchange="submit(this.form)">
+</div>
+</div>
+<div class="row row-center g-2">
+<div class="col-auto">
+<label class="align-middle">並び替え : </label>
+</div>
+<div class="col-auto">
 <select class="form-select" name="sort_by" onchange="submit(this.form)">
 <option value="manual" selected>締切が早い順</option>
 <option value="latest" <%c++ if(sort_by=="latest") $$<<"selected";%>>新しい順</option>
+<option value="previous" <%c++ if(sort_by=="previous") $$<<"selected";%>>古い順</option>
 </select>
+</div>
 </div>
 </form>
 <div class="row row-idea g-4 py-5 row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
@@ -54,5 +99,6 @@ for(auto idea:IdeaList){
 </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/tag_check.js"></script>
 </body>
 </html>

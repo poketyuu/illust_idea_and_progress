@@ -234,11 +234,13 @@ void idea::IdeaAll(const HttpRequestPtr &req, std::function<void(const HttpRespo
     try
     {
         auto UserID = req->session()->get<std::string>(ID);
+        auto tag = req->getParameter("tag");
         auto sort = req->getParameter("sort_by");
-        auto IsComp = (req->getParameter("IsComp")) == "on";
+        auto IsComp = req->getParameter("IsComp");
         auto search = req->getParameter("search");
-        auto result = drogon::app().getDbClient("default")->execSqlAsyncFuture(IdeaAllSQL(search, IsComp, sort), UserID).get();
+        auto result = drogon::app().getDbClient("default")->execSqlAsyncFuture(IdeaAllSQL(tag,search, IsComp, sort), UserID).get();
         std::vector<std::unordered_map<std::string, std::string>> IdeaList;
+        int sum = 0;
         for (auto row : result)
         {
             std::unordered_map<std::string, std::string> IdeaCard;
@@ -272,21 +274,23 @@ void idea::IdeaAll(const HttpRequestPtr &req, std::function<void(const HttpRespo
                 }
             }
             if(row["turn"].as<int>()<0) cardtype = R"("card card-perfect")";
+            sum++;
             IdeaList.push_back(std::unordered_map<std::string, std::string>{
                 {"title", row["title"].as<std::string>()},
                 {"explain", row["explain"].as<std::string>()},
-                {"state",row["context"].as<std::string>()},
+                {"state", row["context"].as<std::string>()},
                 {"deadline", deadline},
                 {"cardtype", cardtype},
-                {"cardLink", cardLink}
-                });
+                {"cardLink", cardLink}});
         }
         auto viewData = HttpViewData();
         viewData.insert("IdeaList", IdeaList);
+        viewData.insert("TagList", MakeTagList(UserID));
+        viewData.insert("sum", sum);
         viewData.insert("search", search);
         viewData.insert("IsComp", IsComp);
         viewData.insert("sort_by", sort);
-        viewData.insert("state", MakeStateList(UserID));
+        viewData.insert("Tag", tag);
         callback(HttpResponse::newHttpViewResponse("IdeaAll.csp", viewData));
     }
     catch (const std::exception &e)
@@ -326,25 +330,41 @@ std::string idea::IdeaEditSQL(std::string UserID, int IdeaID, bool deadlineExist
     }
     return newSQL;
 }
-std::string idea::IdeaAllSQL(std::string Keyword, bool IsComp, std::string sort_by) const {
-    std::string select = "select * from ideaview where id = $1";
+std::string idea::IdeaAllSQL(std::string tag,std::string Keyword, std::string IsComp, std::string sort_by) const {
+    std::string select = "select * from ideaview";
+    std::string where = " where id = $1";
     std::string order = " order by deadline,iid desc";
+    if (!tag.empty())
+    {
+        if(tag=="未分類"){
+            where = " where (id,iid) not in (select id,iid from class where id = $1) and id = $1";
+        }
+        else
+        {
+            where = " where (id,iid) in (select id,iid from class where id = $1 and name = '" + tag + "')";
+        }
+    }
     if (!Keyword.empty())
     {
         if(Keyword.find("'") == std::string::npos){
-            select = select + " and title like '%" + Keyword + "%'";
+            where = where + " and title like '%" + Keyword + "%'";
         }
     }
-    if(IsComp)
-        select = select + " and turn != -1";
+    if(IsComp=="True"){
+        where = where + " and turn = -1";
+    }else if(IsComp=="False"){
+        where = where + " and turn != -1";
+    }
     if(sort_by =="latest"){
         order = " order by iid desc";
+    }else if(sort_by =="previous"){
+        order = " order by iid";
     }
-    std::cout << select << std::endl;
-    return select + order;
+    return select + where + order;
 }
 std::map<int, std::string> idea::MakeStateList(std::string UserID) const
 {
+    //Get State List order by turn
     std::map<int,std::string> statelist;
     try
     {
@@ -359,8 +379,27 @@ std::map<int, std::string> idea::MakeStateList(std::string UserID) const
     }
     return statelist;
 }
+std::vector<std::string> idea::MakeTagList(std::string UserID) const{
+    //Get User's tag List order by tagged idea amount
+    std::vector<std::string> tagList;
+    tagList.push_back("未分類");
+    try
+    {
+        auto result = drogon::app().getDbClient("default")->execSqlAsyncFuture("select id,name,count(*) from class where id = $1 group by id,name order by count desc",UserID).get();
+        for(auto row:result){
+            if(row["count"].as<int>()==0) break;
+            tagList.push_back(row["name"].as<std::string>());
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+    return tagList;
+}
 std::tm idea::TMFromSQLdata(std::string datastring) const
 {
+    // Get time data from string(YYYY-MM-dd)
     std::smatch results;
     std::string pattern = R"((\d{4})-(\d{2})-(\d{2}))";
     if (std::regex_match(datastring, results, std::regex(pattern)))
@@ -374,6 +413,7 @@ std::tm idea::TMFromSQLdata(std::string datastring) const
 }
 std::string idea::TMtoSQLdata() const
 {
+    //Get string(YYYY-MM-dd) from time
     std::time_t timenow = time(NULL);
     struct tm local;
     auto lt = localtime_r(&timenow, &local);

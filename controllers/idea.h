@@ -40,8 +40,9 @@ class idea : public drogon::HttpController<idea>
     std::string IdeaAddSQL(std::string UserID, int Ideaid,bool deadlineExist) const;
     std::string IdeaEditSQL(std::string UserID, int Ideaid, bool deadlineExist) const;
     std::string IdeaDeleteSQL(std::string UserID, int Ideaid) const;
-    std::string IdeaAllSQL(std::string Keyword, bool IsComp, std::string sort_by) const;
+    std::string IdeaAllSQL(std::string tag,std::string Keyword, std::string IsComp, std::string sort_by) const;
     std::map<int, std::string> MakeStateList(std::string UserID) const;
+    std::vector<std::string> MakeTagList(std::string UserID) const;
     std::tm TMFromSQLdata(std::string) const;
     std::string TMtoSQLdata() const;
 };
