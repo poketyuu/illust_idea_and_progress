@@ -47,14 +47,18 @@ if(ideacard.first == -1){
 </select>
 </div>
 <div class="col-auto">
+<%c++ if( idea["cardtype"]==R"("card card-out")" || idea["cardtype"] == R"("card card-1week")"){ %>
+<button class="btn btn-outline-light" id="button_<%c++ $$<<idea["ideaid"];%>" type="submit" disabled>変更</button>
+<%c++ }else{%>
 <button class="btn btn-outline-dark" id="button_<%c++ $$<<idea["ideaid"];%>" type="submit" disabled>変更</button>
+<%c++ }%>
 </div>
 </div>
 </form>
 </div>
 </div>
 <%c++ if(!idea["deadline"].empty()){%>
-<div class="card-footer text-muted">締切:<%c++ $$<<idea["deadline"];%></div>
+<div class="card-footer text-deadline">締切:<%c++ $$<<idea["deadline"];%></div>
 <%c++ }%>
 </div>
 </div>

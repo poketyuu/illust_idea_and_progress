@@ -34,6 +34,10 @@ body {
 .batsu::after {
     transform: translate(-50%, -50%) rotate(-45deg);
 }
+.sum-label{
+    font-size: 1.5rem;
+    padding-right: 0.1rem;
+}
 
 .row-center{
     display: flex;

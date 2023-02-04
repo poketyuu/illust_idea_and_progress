@@ -380,7 +380,7 @@ std::map<int, std::string> idea::MakeStateList(std::string UserID) const
     return statelist;
 }
 std::vector<std::string> idea::MakeTagList(std::string UserID) const{
-    //Get User's tag List order by tagged idea amount
+    //Get User's tag List order by tagged idea amount not 0
     std::vector<std::string> tagList;
     tagList.push_back("未分類");
     try

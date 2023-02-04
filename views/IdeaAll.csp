@@ -7,6 +7,7 @@ auto IsComp = @@.get<std::string>("IsComp");
 auto sort_by = @@.get<std::string>("sort_by");
 auto TagList = @@.get<std::vector<std::string>>("TagList");
 auto tag = @@.get<std::string>("Tag");
+auto sum = @@.get<int>("sum");
 auto IdeaList = @@.get<std::vector<std::unordered_map<std::string,std::string>>>("IdeaList");
 %>
 <%view temphead%>
@@ -18,7 +19,14 @@ auto IdeaList = @@.get<std::vector<std::unordered_map<std::string,std::string>>>
 <main>
 <div class="container-fluid">
 <div class="container px-4 py-5">
-<h2 class="pb-2 border-bottom">アイデア一覧</h2>
+<div class="row align-items-end justify-content-between mb-3 border-bottom">
+<div class="col-auto">
+<h1>アイデア一覧</h1>
+</div>
+<div class="col-auto">
+<label class="mb-1"><span class="sum-label">{% sum %}</span>件</label>
+</div>
+</div>
 <form method="GET">
 <div class="row justify-content-start g-1">
 <%c++ 
@@ -85,11 +93,11 @@ for(auto idea:IdeaList){
 <div class="card-body">
 <a class="stretched-link" href=<%c++ $$<<idea["cardLink"];%>></a>
 <h2 class="card-title"><%c++ $$<<idea["title"];%></h2>
-<h4 class="card-subtitle mb-2"><%c++ $$<<idea["state"];%></h4>
+<h4 class="card-subtitle text-deadline mb-2"><%c++ $$<<idea["state"];%></h4>
 <p class="card-text card-text-br"><%c++ $$<<idea["explain"];%></p>
 </div>
 <%c++ if(!idea["deadline"].empty()){%>
-<div class="card-footer text-muted">締切:<%c++ $$<<idea["deadline"];%></div>
+<div class="card-footer text-deadline">締切:<%c++ $$<<idea["deadline"];%></div>
 <%c++ }%>
 </div>
 </div>
