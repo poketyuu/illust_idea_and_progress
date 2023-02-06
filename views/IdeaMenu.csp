@@ -2,7 +2,12 @@
 <html lang="ja">
 <head>
 <%c++ 
-//auto InDojinshi = @@.get<bool>("InDojinshi");
+//このアイデアにつけられたタグのリスト
+auto taglist = @@.get<std::vector<std::string>>("taglist");
+auto IdeaTurn = @@.get<int>("turn");
+auto StateList = @@.get<std::map<int,std::string>>("StateList");
+//当ユーザーのすべてのタグのリスト(タグ追加の検索候補用)
+auto AllTagList = @@.get<std::vector<std::string>>("AllTags");
 %>
 <%view temphead%>
 <link rel="stylesheet" href="/css/IdeaMenu.css">
@@ -11,15 +16,79 @@
 <%view tempbody%>
 <main>
 <div class="container px-2 py-5">
+<div class="row align-items-start justify-content-between border-bottom mb-3">
+<div class="col-auto">
 <h1>[[title]]</h1>
+</div>
+<div class="col-auto">
+<a role="button" class="btn btn-outline-dark mb-1" href="edit">編集</a>
+</div>
+</div>
+<div class="row align-items-start justify-content-between mb-2">
+<div class="col-auto">
+<form action="/idea/changestate" method="GET">
+<div class = "row">
+<div class = "col-auto">
+<select class="form-select" name="progress_turn" onchange="SelectChange('ChangeState')">
+<%c++ for(const auto& [turn,context]:StateList){%>
+<%c++ if(turn == -1) continue;%>
+<%c++ if(IdeaTurn == turn){%>
+<option value="{% turn %}" selected>{% context%}</option>
+<%c++ }else{%>
+<option value="{% turn %}">{% context%}</option>
+<%c++ }%>
+<%c++ 
+}
+if(IdeaTurn == -1){
+%>
+<option value="-1" selected>完成</option>
+<%c++ }else{%>
+<option value="-1">完成</option>
+<%c++ }%>
+</select>
+</div>
+<div class="col-auto">
+<button class="btn btn-outline-dark" id="ChangeState" type="submit" disabled>変更</button>
+</div>
+</div>
+</form>
+</div>
+<div class="col-auto">
+<%c++ if(!@@.get<std::string>("deadline").empty()){%>
+<p class="text-deadline">締切:[[deadline]]</p>
+<%c++ }%>
+</div>
+</div>
+<div class="row mb-4">
 <p class="text-br">[[explain]]</p>
-<h5>締切:[[deadline]]</h5>
+</div>
+<div class="row align-items-center g-3 mb-4">
+<%c++ for(auto tag:taglist){%>
+<div class="col-auto">
+<a class="tag-link" href="/idea/All?tag={% tag %}&sort_by=manual">#{% tag %}</a>
+</div>
+<%c++ }%>
+<div class="col-auto">
+<button class = "btn btn-sm btn-outline-dark" id="AddTag_btn" onclick="AddTagMode(true)">タグを追加</button>
+<form id="AddTag_form" action="AddTag" method="GET">
+<input type="text" name="newtag" list="Alltags">
+<button class="btn btn-sm btn-outline-dark" type="submit">追加</button>
+<button class="btn btn-sm btn-outline-dark" type="button" onclick="AddTagMode(false)">キャンセル</button>
+</form>
+<datalist id="Alltags">
+<%c++ for(auto othertag:AllTagList){%>
+<option value="{% othertag %}"></option>
+<%c++ }%>
+</div>
+</div>
 <div class="mb-3">
-<a role="button" class="btn btn-success" href="edit">編集</a>
-<a role="button" class="btn btn-danger" href="DeleteIdea">削除</a>
+<a role="button" class="btn btn-danger" onclick="delete_check()">削除</a>
 </div>
 </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script type="text/javascript" src="/js/delete_check.js"></script>
+<script type="text/javascript" src="/js/progress_change_check.js"></script>
+<script type="text/javascript" src="/js/AddTagMode.js"></script>
 </body>
 </html>

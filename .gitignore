@@ -82,6 +82,7 @@ dkms.conf
 build/*
 !build/static_html/
 !build/css
+!build/js
 
 #config file
 #config.json

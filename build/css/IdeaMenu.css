@@ -11,3 +11,6 @@ body {
 .text-br{
     white-space: pre-wrap;
 }
+.tag-link{
+    text-decoration: none;
+}
