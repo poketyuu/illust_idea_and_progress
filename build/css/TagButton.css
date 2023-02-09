@@ -38,6 +38,10 @@ body {
     font-size: 1.5rem;
     padding-right: 0.1rem;
 }
+.row-tag{
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+}
 
 .row-center{
     display: flex;

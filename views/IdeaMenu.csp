@@ -71,6 +71,7 @@ if(IdeaTurn == -1){
 <div class="col-auto">
 <button class = "btn btn-sm btn-outline-dark" id="AddTag_btn" onclick="AddTagMode(true)">タグを追加</button>
 <form id="AddTag_form" action="AddTag" method="GET">
+<input type="hidden" name="mode" value="ideainfo">
 <input type="text" name="newtag" list="Alltags">
 <button class="btn btn-sm btn-outline-dark" type="submit">追加</button>
 <button class="btn btn-sm btn-outline-dark" type="button" onclick="AddTagMode(false)">キャンセル</button>

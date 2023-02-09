@@ -28,7 +28,7 @@ auto IdeaList = @@.get<std::vector<std::unordered_map<std::string,std::string>>>
 </div>
 </div>
 <form method="GET">
-<div class="row justify-content-start g-1">
+<div class="row justify-content-start g-1 row-tag">
 <%c++ 
 for(auto tagcard:TagList){
     bool IsSelect = (tag==tagcard);

@@ -165,6 +165,20 @@ void idea::edit(const HttpRequestPtr &req, std::function<void(const HttpResponse
         viewdata.insert("explain", result[0]["explain"].as<std::string>());
         viewdata.insert("deadline", result[0]["deadline"].as<std::string>());
         viewdata.insert("today", TMtoSQLdata());
+        std::vector<std::string> taglist;
+        auto taglistResult = DBclient->execSqlAsyncFuture("SELECT * FROM class WHERE id = $1 AND iid = $2", userID, Ideaid).get();
+        for (auto tag : taglistResult)
+        {
+            taglist.push_back(tag["name"].as<std::string>());
+        }
+        viewdata.insert("taglist", taglist);
+        std::vector<std::string> AllTags;
+        auto AllTagsResult = DBclient->execSqlAsyncFuture("SELECT * FROM tags WHERE id = $1 AND name NOT IN (SELECT name FROM class WHERE id = $1 AND iid = $2 order by name)", userID, Ideaid).get();
+        for (auto tag : AllTagsResult)
+        {
+            AllTags.push_back(tag["name"].as<std::string>());
+        }
+        viewdata.insert("AllTags", AllTags);
         callback(drogon::HttpResponse::newHttpViewResponse("ideaEdit.csp", viewdata));
     }
     catch (const std::exception &e)
@@ -316,7 +330,9 @@ void idea::IdeaAll(const HttpRequestPtr &req, std::function<void(const HttpRespo
 void idea::AddTag(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const{
     auto UserID = req->session()->get<std::string>(ID);
     auto newtag = req->getParameter("newtag");
-    try{
+    auto mode = req->getParameter("mode");
+    try
+    {
         auto DBClient = drogon::app().getDbClient("default");
         auto TagExistCheck = DBClient->execSqlAsyncFuture("select exists (select * from tags where id = $1 and name = $2)",UserID,newtag).get();
         bool exists = TagExistCheck[0]["exists"].as<bool>();
@@ -328,10 +344,34 @@ void idea::AddTag(const HttpRequestPtr &req, std::function<void(const HttpRespon
     {
     }
     auto viewData = HttpViewData();
-    viewData.insert("newpage", "/idea/" + std::to_string(Ideaid) + "/ideainfo");
+    std::string newpage = "/idea/" + std::to_string(Ideaid) + "/ideainfo";
+    if(mode=="edit")
+        newpage = "/idea/" + std::to_string(Ideaid) + "/edit";
+    viewData.insert("newpage", newpage);
     callback(HttpResponse::newHttpViewResponse("PageTransition.csp", viewData));
 }
-
+void idea::RemoveTag(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const
+{
+    auto UserID = req->session()->get<std::string>(ID);
+    auto tag = req->getParameter("tag");
+    auto mode = req->getParameter("mode");
+    try
+    {
+        auto DBClient = drogon::app().getDbClient("default");
+        DBClient->execSqlAsyncFuture("delete from class where id = $1 and iid = $2 and name = $3", UserID, Ideaid, tag);
+        auto TagExistCheck = DBClient->execSqlAsyncFuture("select exists (select * from class where id = $1 and name = $2)", UserID, tag).get();
+        bool exists = TagExistCheck[0]["exists"].as<bool>();
+        if (!exists)
+            DBClient->execSqlAsyncFuture("delete from tags where id = $1 and name = $2", UserID, tag);
+    }
+    catch (const std::exception &e)
+    {
+    }
+    auto viewData = HttpViewData();
+    std::string newpage = "/idea/" + std::to_string(Ideaid) + "/edit";
+    viewData.insert("newpage", newpage);
+    callback(HttpResponse::newHttpViewResponse("PageTransition.csp", viewData));
+}
 std::string idea::IdeaListSQL() const
 {
     return std::string("select * from ideaview where id = $1 order by turn desc, deadline,iid");
