@@ -20,7 +20,7 @@ auto AllTagList = @@.get<std::vector<std::string>>("AllTags");
 <label class="form-label">タイトル:</label>
 </div>
 <div class="col-12 col-md-9">
-<input type="text" name="idea_title" value="[[title]]" required>
+<input class="title-input" type="text" name="idea_title" value="[[title]]" required>
 </div>
 </div>
 <div class="row justify-content-start mb-3">
