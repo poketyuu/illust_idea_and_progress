@@ -77,7 +77,25 @@ void idea::get(const HttpRequestPtr &req, std::function<void(const HttpResponseP
 }
 void idea::newidea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const
 {
-    callback(HttpResponse::newHttpViewResponse("NewIdea.csp"));
+    auto UserID = req->session()->get<std::string>(ID);
+    auto params = req->getParameters();
+    auto viewdata = HttpViewData();
+    try
+    {
+        std::vector<std::string> tagList;
+        auto result = drogon::app().getDbClient("default")->execSqlAsyncFuture("select id,name,count(*) from class where id = $1 group by id,name order by count desc", UserID).get();
+        for (auto row : result)
+        {
+            if (row["count"].as<int>() == 0)
+                break;
+            tagList.push_back(row["name"].as<std::string>());
+        }
+        viewdata.insert("tagList", tagList);
+    }
+    catch (const std::exception &e)
+    {
+    }
+    callback(HttpResponse::newHttpViewResponse("NewIdea.csp",viewdata));
 }
 void idea::AddIdea(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const
 {
@@ -104,6 +122,14 @@ void idea::AddIdea(const HttpRequestPtr &req, std::function<void(const HttpRespo
             para["idea_title"],para["idea_explain"],deadline).get();
         }
         auto progress = DBclient->execSqlAsyncFuture("INSERT into progress values($1,$2,0)", userID, NewIid).get();
+        int tagnum = std::stoi(para["tagnum"]);
+        std::vector<std::string> taglist;
+        for (int i = 0; i < tagnum; i++)
+        {
+            std::string tagname = "tag-" + std::to_string(i);
+            taglist.push_back(para[tagname]);
+        }
+        EditTag(userID, NewIid, taglist);
     }
     catch (const std::exception &e)
     {
@@ -210,6 +236,14 @@ void idea::EditIdea(const HttpRequestPtr &req, std::function<void(const HttpResp
                                                        para["idea_title"], para["idea_explain"], deadline)
                               .get();
         }
+        int tagnum = std::stoi(para["tagnum"]);
+        std::vector<std::string> taglist;
+        for (int i = 0; i < tagnum; i++)
+        {
+            std::string tagname = "tag-" + std::to_string(i);
+            taglist.push_back(para[tagname]);
+        }
+        EditTag(UserID, Ideaid, taglist);
     }
     catch(const std::exception& e)
     {
@@ -371,6 +405,41 @@ void idea::RemoveTag(const HttpRequestPtr &req, std::function<void(const HttpRes
     std::string newpage = "/idea/" + std::to_string(Ideaid) + "/edit";
     viewData.insert("newpage", newpage);
     callback(HttpResponse::newHttpViewResponse("PageTransition.csp", viewData));
+}
+void idea::EditTag(std::string UserID,int Ideaid,std::vector<std::string> tags) const{
+    try{
+        auto DBClient = drogon::app().getDbClient("default");
+        std::vector<std::string> OldTagList;
+        auto OldTagResult = DBClient->execSqlAsyncFuture("select * from class where id = $1 and iid = $2", UserID, Ideaid).get();
+        for(auto row:OldTagResult){
+            OldTagList.push_back(row["name"].as<std::string>());
+        }
+        for (auto tag : tags)
+        {
+            //tagが既に存在しているかを愚直に調べる
+            auto itr = std::find(OldTagList.begin(), OldTagList.end(), tag);
+            if(itr == OldTagList.end()){
+                //タグ追加
+                auto TagExistCheck = DBClient->execSqlAsyncFuture("select exists (select * from tags where id = $1 and name = $2)", UserID, tag).get();
+                bool exists = TagExistCheck[0]["exists"].as<bool>();
+                if (!exists)
+                    DBClient->execSqlAsyncFuture("insert into tags values($1,$2)", UserID, tag);
+                DBClient->execSqlAsyncFuture("insert into class values($1,$2,$3)", UserID, Ideaid, tag);
+            }else{
+                OldTagList.erase(itr);
+            }
+        }
+        for(auto oldtag:OldTagList){
+            auto result = DBClient->execSqlAsyncFuture("delete from class where id = $1 and iid = $2 and name = $3", UserID, Ideaid, oldtag);
+            auto TagExistCheck = DBClient->execSqlAsyncFuture("select exists (select * from class where id = $1 and name = $2)", UserID, oldtag).get();
+            bool exists = TagExistCheck[0]["exists"].as<bool>();
+            if (!exists)
+                DBClient->execSqlAsyncFuture("delete from tags where id = $1 and name = $2", UserID, oldtag);
+        }
+    }catch (const std::exception &e){
+
+    }
+
 }
 std::string idea::IdeaListSQL() const
 {

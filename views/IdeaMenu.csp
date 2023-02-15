@@ -80,6 +80,7 @@ if(IdeaTurn == -1){
 <%c++ for(auto othertag:AllTagList){%>
 <option value="{% othertag %}"></option>
 <%c++ }%>
+</datalist>
 </div>
 </div>
 <div class="mb-3">

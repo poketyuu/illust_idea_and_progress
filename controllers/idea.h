@@ -39,6 +39,7 @@ class idea : public drogon::HttpController<idea>
     void IdeaAll(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback) const;
     void AddTag(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const;
     void RemoveTag(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback, int Ideaid) const;
+    void EditTag(std::string UserID, int Ideaid, std::vector<std::string> tags) const;
     std::string IdeaListSQL() const;
     std::string StateListSQL() const;
     std::string IdeaAddSQL(std::string UserID, int Ideaid,bool deadlineExist) const;

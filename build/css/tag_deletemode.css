@@ -1,0 +1,7 @@
+html,
+.tag-style{
+    color: blue;
+}
+.tag-style:hover{
+    text-decoration: line-through;
+}
