@@ -1,4 +1,4 @@
-var tag_area = document.getElementById("newtags");
+var tag_area = document.getElementById("tag-area");
 var TagDataList = document.getElementById("Alltags");
 var AddTagMap = new Map();
 var tagnum = 1;
@@ -25,9 +25,24 @@ function MakeTagLabel() {
     tagcol.appendChild(newtagEle);
     tag_area.appendChild(tagcol);
     tagnum++;
+    EditSuggestTags(true, newtag);
+}
+function EditSuggestTags(mode, tag) {
+    const suggestions = TagDataList.children;
+    for (var i = 0; i < suggestions.length; i++){
+        if (suggestions[i].tagName != "OPTION") continue;
+        if (suggestions[i].getAttribute("value") == tag) {
+            if (mode) {
+                suggestions[i].setAttribute("disabled", true);
+            } else {
+                suggestions[i].removeAttribute("disabled");
+            }
+        }
+    }
 }
 function DeleteTagLabel(id) {
     var deleteTagtext = document.getElementById("tag-" + id);
+    EditSuggestTags(false, AddTagMap.get(id));
     AddTagMap.delete(id);
     deleteTagtext.remove();
 }

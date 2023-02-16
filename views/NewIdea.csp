@@ -44,11 +44,11 @@ auto tagList = @@.get<std::vector<std::string>>("tagList");
 <label class="form-label">タグ:</label>
 </div>
 <div class="col-auto">
-<div id="newtags" class="row">
+<div id="tag-area" class="row">
 </div>
 </div>
 <div class="col-auto">
-<input type="text" id="tag-box" name="newtag" list="Alltags">
+<input type="text" id="tag-box" name="newtag" list="Alltags" autocomplete="off">
 </div>
 <datalist id="Alltags">
 <%c++ for(auto tag:tagList){%>

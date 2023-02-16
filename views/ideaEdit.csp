@@ -43,11 +43,15 @@ auto AllTagList = @@.get<std::vector<std::string>>("AllTags");
 <div class="col-6 col-md-1">
 <label class="form-label">タグ管理:</label>
 </div>
+<div class="col-auto">
+<div id="tag-area" class="row">
 <%c++ for(auto tag:taglist){%>
 <div class="col-auto">
 <a class="tag-link" href="RemoveTag?tag={% tag %}">#{% tag %}</a>
 </div>
 <%c++ }%>
+</div>
+</div>
 <div class="col-auto">
 <input type="text" name="newtag" list="Alltags">
 <input type="hidden" name="mode" value="edit">
