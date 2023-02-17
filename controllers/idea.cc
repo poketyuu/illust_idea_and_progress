@@ -199,7 +199,7 @@ void idea::edit(const HttpRequestPtr &req, std::function<void(const HttpResponse
         }
         viewdata.insert("taglist", taglist);
         std::vector<std::string> AllTags;
-        auto AllTagsResult = DBclient->execSqlAsyncFuture("SELECT * FROM tags WHERE id = $1 AND name NOT IN (SELECT name FROM class WHERE id = $1 AND iid = $2 order by name)", userID, Ideaid).get();
+        auto AllTagsResult = DBclient->execSqlAsyncFuture("SELECT * FROM tags WHERE id = $1", userID).get();
         for (auto tag : AllTagsResult)
         {
             AllTags.push_back(tag["name"].as<std::string>());

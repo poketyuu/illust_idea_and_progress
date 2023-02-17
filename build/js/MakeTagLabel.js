@@ -2,6 +2,11 @@ var tag_area = document.getElementById("tag-area");
 var TagDataList = document.getElementById("Alltags");
 var AddTagMap = new Map();
 var tagnum = 1;
+function DefaultTagSet(...tags) {
+    for (const tag of tags) {
+        AddTag(tag);
+    }
+}
 function MakeTagLabel() {
     var AddTagTxt = document.getElementById("tag-box");
     var newtag = AddTagTxt.value;
@@ -12,7 +17,6 @@ function MakeTagLabel() {
             return;
         }
     }
-    AddTagMap.set(tagnum, newtag);
     AddTagTxt.value = "";
     var tagcol = document.createElement("div");
     tagcol.setAttribute("class", "col-auto");
@@ -24,8 +28,13 @@ function MakeTagLabel() {
     newtagEle.textContent = ("#"+newtag);
     tagcol.appendChild(newtagEle);
     tag_area.appendChild(tagcol);
+    AddTag(newtag);
+}
+function AddTag(tag) {
+    console.log(tag);
+    AddTagMap.set(tagnum, tag);
     tagnum++;
-    EditSuggestTags(true, newtag);
+    EditSuggestTags(true, tag);
 }
 function EditSuggestTags(mode, tag) {
     const suggestions = TagDataList.children;

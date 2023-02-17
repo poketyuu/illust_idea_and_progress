@@ -45,16 +45,16 @@ auto tagList = @@.get<std::vector<std::string>>("tagList");
 </div>
 <div class="col-auto">
 <div id="tag-area" class="row">
-</div>
-</div>
-<div class="col-auto">
-<input type="text" id="tag-box" name="newtag" list="Alltags" autocomplete="off">
-</div>
 <datalist id="Alltags">
 <%c++ for(auto tag:tagList){%>
 <option value="{% tag %}"></option>
 <%c++ }%>
 </datalist>
+</div>
+</div>
+<div class="col-auto">
+<input type="text" id="tag-box" name="newtag" list="Alltags" autocomplete="off">
+</div>
 <div class="col-auto">
 <button type="button" onclick="MakeTagLabel()">追加</button>
 </div>
