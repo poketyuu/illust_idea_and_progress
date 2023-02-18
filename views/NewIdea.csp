@@ -58,6 +58,7 @@ auto tagList = @@.get<std::vector<std::string>>("tagList");
 <div class="col-auto">
 <button type="button" onclick="MakeTagLabel()">追加</button>
 </div>
+</div>
 <div class="row mb-3">
 <div class="col-auto">
 <button class="btn-primary" type="submit" onclick="addTagParam()">追加</button>

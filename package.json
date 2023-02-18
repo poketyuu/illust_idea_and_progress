@@ -1,5 +1,8 @@
 {
   "devDependencies": {
     "typescript": "^4.9.4"
+  },
+  "dependencies": {
+    "sortablejs": "^1.15.0"
   }
 }
