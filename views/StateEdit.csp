@@ -30,7 +30,7 @@ int MaxSid = @@.get<int>("MaxSid");
     std:tie(sid,name) = state;
 %>
 <li class="list-group-item" id="state-{% sid %}" data-sid="{% sid %}">
-<div class="row align-items-center justify-content-between">
+<div id="dispstate-{% sid %}" class="row align-items-center justify-content-between">
 <div class="col-auto">
 <div class="row align-items-center">
 <div class="col-auto slide-btn mx-2">
@@ -39,17 +39,41 @@ int MaxSid = @@.get<int>("MaxSid");
 <span class="hamburger-bar"></span>
 </div>
 <div class="col-auto">
-<p class="my-auto">{% name %}</p>
+<p class="my-auto" id="sname-{% sid %}">{% name %}</p>
 </div>
 </div>
 </div>
 <div class="col-auto">
 <div class="row align-items-center">
 <div class="col-auto">
-<button class=" btn btn-outline-secondary" onclick="EditStateName({% sid %})">名前を変更</btn>
+<button class=" btn btn-outline-secondary" onclick="ChangeEditMode(true,{% sid %})">名前を変更</btn>
 </div>
 <div class="col-auto">
 <button class="btn btn-outline-danger" onclick="DeleteState({% sid %})">削除</btn>
+</div>
+</div>
+</div>
+</div>
+<div id="editstate-{% sid %}" class="row align-items-center justify-content-between" style="display:none;">
+<div class="col-auto">
+<div class="row align-items-center">
+<div class="col-auto slide-btn mx-2">
+<span class="hamburger-bar"></span>
+<span class="hamburger-bar"></span>
+<span class="hamburger-bar"></span>
+</div>
+<div class="col-auto">
+<input type="text" id="changename-{% sid %}">
+</div>
+</div>
+</div>
+<div class="col-auto">
+<div class="row align-items-center">
+<div class="col-auto">
+<button class=" btn btn-outline-primary" onclick="EditStateName({% sid %})">変更</btn>
+</div>
+<div class="col-auto">
+<button class="btn btn-outline-secondary" onclick="ChangeEditMode(false,{% sid %})">キャンセル</btn>
 </div>
 </div>
 </div>
