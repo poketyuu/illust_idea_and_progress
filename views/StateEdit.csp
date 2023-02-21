@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <%c++
-auto StateList = @@.get<std::vector<std::pair<int,std::string>>>("StateList");
+auto StateList = @@.get<std::vector<std::tuple<int,std::string,int>>>("StateList");
 int MaxSid = @@.get<int>("MaxSid");
 %>
 <%view temphead%>
@@ -12,10 +12,20 @@ int MaxSid = @@.get<int>("MaxSid");
 <%view tempbody%>
 <main>
 <div class="container px-2 py-5">
+<div class="row mb-3 border-bottom justify-content-between align-item-start">
+<div class="col-auto">
+<h1>マイ進捗編集</h1>
+</div>
+<div class="col-auto">
+<form action="ChangeStates" method="POST">
+<button type="submit" class="btn btn-primary" onclick="SubmitStateChange()">変更を保存</button>
+</form>
+</div>
+</div>
 <div class="row">
 <ul class="list-group">
-<li class="list-group-item">
-<div class="row">
+<li class="list-group-item list-group-item-primary d-flex align-items-center">
+<div class="row align-items-center">
 <div class="col-auto slide-btn mx-2">
 </div>
 <div class="col-auto">
@@ -23,13 +33,14 @@ int MaxSid = @@.get<int>("MaxSid");
 </div>
 </div>
 </li>
-<ul class="list-group" id="state-list">
+<ul class="list-group my-0" id="state-list">
 <%c++ for(auto state:StateList){
     int sid;
     std::string name;
-    std:tie(sid,name) = state;
+    int count;
+    std:tie(sid,name,count) = state;
 %>
-<li class="list-group-item" id="state-{% sid %}" data-sid="{% sid %}">
+<li class="list-group-item state-item align-items-center" id="state-{% sid %}" data-sid="{% sid %}">
 <div id="dispstate-{% sid %}" class="row align-items-center justify-content-between">
 <div class="col-auto">
 <div class="row align-items-center">
@@ -39,17 +50,22 @@ int MaxSid = @@.get<int>("MaxSid");
 <span class="hamburger-bar"></span>
 </div>
 <div class="col-auto">
-<p class="my-auto" id="sname-{% sid %}">{% name %}</p>
+<p class="my-auto state-name" id="sname-{% sid %}">{% name %}</p>
 </div>
 </div>
 </div>
 <div class="col-auto">
 <div class="row align-items-center">
+<%c++ if(count>0){%>
 <div class="col-auto">
-<button class=" btn btn-outline-secondary" onclick="ChangeEditMode(true,{% sid %})">名前を変更</btn>
+<p class="my-auto"><span class="badge bg-primary rounded-pill">{% count %}</span></p>
+</div>
+<%c++ }%>
+<div class="col-auto">
+<button class=" btn btn-outline-secondary btn-sm" onclick="ChangeEditMode(true,{% sid %})">名前を変更</btn>
 </div>
 <div class="col-auto">
-<button class="btn btn-outline-danger" onclick="DeleteState({% sid %})">削除</btn>
+<button class="btn btn-outline-danger btn-sm" onclick="DeleteState({% sid %})">削除</btn>
 </div>
 </div>
 </div>
@@ -70,17 +86,17 @@ int MaxSid = @@.get<int>("MaxSid");
 <div class="col-auto">
 <div class="row align-items-center">
 <div class="col-auto">
-<button class=" btn btn-outline-primary" onclick="EditStateName({% sid %})">変更</btn>
+<button class=" btn btn-outline-primary btn-sm" onclick="EditStateName({% sid %})">変更</btn>
 </div>
 <div class="col-auto">
-<button class="btn btn-outline-secondary" onclick="ChangeEditMode(false,{% sid %})">キャンセル</btn>
+<button class="btn btn-outline-secondary btn-sm" onclick="ChangeEditMode(false,{% sid %})">キャンセル</btn>
 </div>
 </div>
 </div>
 </div>
 </li>
 <%c++ }%>
-<li class="list-group-item" id="AddState_li">
+<li class="list-group-item state-textbox align-items-center" id="AddState_li">
 <div class="row align-items-center justify-content-between">
 <div class="col-auto">
 <div class="row align-items-center">
@@ -95,17 +111,17 @@ int MaxSid = @@.get<int>("MaxSid");
 </div>
 </div>
 <div class="col-auto">
-<div class="row">
+<div class="row align-items-center">
 <div class="col-auto">
-<button class="btn btn-outline-primary" onclick="AddState()">追加</btn>
+<button class="btn btn-outline-primary btn-sm" onclick="AddState()">追加</btn>
 </div>
 </div>
 </div>
 </div>
 </li>
 </ul>
-<li class="list-group-item">
-<div class="row">
+<li class="list-group-item list-group-item-success d-flex align-items-center">
+<div class="row align-items-center">
 <div class="col-auto slide-btn mx-2">
 </div>
 <div class="col-auto">

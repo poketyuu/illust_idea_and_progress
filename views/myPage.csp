@@ -5,6 +5,7 @@
 auto load = @@.get<bool>("load");
 %>
 <%view temphead%>
+<link rel="stylesheet" href="/css/state_slide.css">
 </head>
 <body>
 <%view tempbody%>
@@ -13,26 +14,38 @@ auto load = @@.get<bool>("load");
 <%c++ 
 if(load){
     auto ID = @@.get<std::string>("ID");
-    auto inwork = @@.get<int>("inwork");
-    auto total = @@.get<int>("total");
-    auto comp = @@.get<int>("comp");
+    auto StateList = @@.get<std::vector<std::tuple<int,std::string,int>>>("StateList");
 %>
 <div class="row align-items-start justify-content-between border-bottom mb-3">
 <div class="col-auto">
-<h1>{% ID %}さんのマイページ</h1>
+<h1>{% ID %}さんのマイ進捗</h1>
 </div>
 <div class="col-auto">
 <a role="button" class="btn btn-outline-dark mb-1" href="EditState">編集</a>
 </div>
 </div>
 <div class="row">
-<h3>完成したアイデア数:{%comp%}</h3>
-</div>
-<div class="row">
-<h3>作業中のアイデア数:{%inwork%}</h3>
-</div>
-<div class="row">
-<h3>全アイデア数:{%total%}</h3>
+<ul class="list-group">
+<%c++ for(auto state:StateList){
+    int sid;
+    std::string name;
+    int count;
+    std::tie(sid,name,count)=state;
+    if(sid==0){
+%>
+<li class="list-group-item list-group-item-success d-flex justify-content-between align-items-center">
+<%c++ }else if(sid==1){%>
+<li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-center">
+<%c++ }else{%>
+<li class="list-group-item d-flex justify-content-between align-items-center">
+<%c++ }%>
+{% name %}
+<%c++ if(count>0){%>
+<span class="badge bg-primary rounded-pill">{% count %}</span>
+<%c++ }%>
+</li>
+<%c++ }%>
+</ul>
 </div>
 <%c++ 
 }else{

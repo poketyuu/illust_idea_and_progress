@@ -14,6 +14,7 @@ class myPage : public drogon::HttpController<myPage>
     // ADD_METHOD_TO(myPage::your_method_name, "/absolute/path/{1}/{2}/list", Get); // path is /absolute/path/{arg1}/{arg2}/list
     METHOD_ADD(myPage::mypage, "/", Get, "IDlogin");
     METHOD_ADD(myPage::EditState, "/EditState", Get, "IDlogin");
+    METHOD_ADD(myPage::ChangeStates, "/ChangeStates", Post, "IDlogin");
 
     METHOD_LIST_END
     // your declaration of processing function maybe like this:
@@ -21,4 +22,6 @@ class myPage : public drogon::HttpController<myPage>
     // void your_method_name(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback, double p1, int p2) const;
     void mypage(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);
     void EditState(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);
+    void ChangeStates(const HttpRequestPtr &req, std::function<void(const HttpResponsePtr &)> &&callback);
+    std::vector<int> turnVectorFromString(std::string turnString) const;
 };

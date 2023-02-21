@@ -101,7 +101,7 @@ void login::addUser(const HttpRequestPtr &req, std::function<void(const HttpResp
         auto result = DBclient->execSqlAsyncFuture(
             AddUserSQL(digest,std::string(salt)),UserID).get();
         auto addstate = DBclient->execSqlAsyncFuture(
-                                    u8"INSERT INTO state VALUES(0,'未着手',0,$1),(1,'完成',-1,$1),(2,'下書き',1,$1),(3,'ラフ',2,$1),(4,'線画',3,$1),(5,'キャラ塗り',4,$1),(6,'背景',5,$1)",UserID)
+                                    u8"INSERT INTO state VALUES(0,'未着手',0,$1),(1,'完成',-1,$1)",UserID)
                             .get();
         auto viewdate = HttpViewData();
         viewdate.insert("message", "");

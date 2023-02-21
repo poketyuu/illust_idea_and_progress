@@ -16,9 +16,10 @@ function AddState() {
     NewStateTxt.value = "";
     // liの中身を生成
     var NewStateLi = document.createElement("li");
-    NewStateLi.setAttribute("class", "list-group-item")
+    NewStateLi.setAttribute("class", "list-group-item state-item")
     MaxSid++;
     NewStateLi.setAttribute("id", "state-" + MaxSid);
+    NewStateLi.setAttribute("data-sid", -1);
     //通常表示用
     var row1 = document.createElement("div");
     row1.setAttribute("class", "row align-items-center justify-content-between")
@@ -41,7 +42,7 @@ function AddState() {
     var col1_2 = document.createElement("div");
     col1_2.setAttribute("class", "col-auto");
     var p_state = document.createElement("p");
-    p_state.setAttribute("class", "my-auto");
+    p_state.setAttribute("class", "my-auto state-name");
     p_state.setAttribute("id", "sname-" + MaxSid);
     p_state.textContent = NewState;
     col1_2.appendChild(p_state);
@@ -159,5 +160,22 @@ function EditStateName(id) {
     ChangeEditMode(false, id);
 }
 function SubmitStateChange() {
-    
+    var States = document.querySelectorAll("#state-list .state-item");
+    var sid_string = "";
+    States.forEach((state,index) => {
+        var sid = state.dataset.sid;
+        sid_string = sid_string + (sid + ",");
+        var statepara = state.querySelector(".state-name");
+        var stateNameInput = document.createElement("input");
+        stateNameInput.setAttribute("type", "hidden");
+        stateNameInput.setAttribute("name", "state-" + index);
+        stateNameInput.setAttribute("value", statepara.textContent);
+        document.forms[0].appendChild(stateNameInput);
+    });
+    console.log(sid_string);
+    var sidListInput = document.createElement("input");
+    sidListInput.setAttribute("type", "hidden");
+    sidListInput.setAttribute("name", "sid-list");
+    sidListInput.setAttribute("value", sid_string);
+    document.forms[0].appendChild(sidListInput);
 }

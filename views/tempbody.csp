@@ -18,7 +18,7 @@
 <li class="nav-item dropdown">
 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">メニュー</a>
 <ul class="dropdown-menu">
-<li><a class="dropdown-item" href="/myPage/">マイページ</a></li>
+<li><a class="dropdown-item" href="/myPage/">マイ進捗</a></li>
 <li><a class="dropdown-item" href="/login/logout">ログアウト</a></li>
 </ul>
 </li>
