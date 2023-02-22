@@ -10,6 +10,7 @@ function DefaultTagSet(...tags) {
 function MakeTagLabel() {
     var AddTagTxt = document.getElementById("tag-box");
     var newtag = AddTagTxt.value;
+    if (newtag == "") return;
     for (let tag of AddTagMap.values()) {
         if (newtag == tag) {
             alert("このタグは既に追加されています!");
@@ -19,10 +20,10 @@ function MakeTagLabel() {
     }
     AddTagTxt.value = "";
     var tagcol = document.createElement("div");
-    tagcol.setAttribute("class", "col-auto");
+    tagcol.setAttribute("class", "col-auto d-flex align-items-center");
     tagcol.setAttribute("id", "tag-" + tagnum);
     var newtagEle = document.createElement("p");
-    newtagEle.setAttribute("class", "tag-style");
+    newtagEle.setAttribute("class", "tag-style my-auto");
     newtagEle.setAttribute("ontouchstart", "");
     newtagEle.setAttribute("onclick", "DeleteTagLabel("+tagnum+")");
     newtagEle.textContent = ("#"+newtag);

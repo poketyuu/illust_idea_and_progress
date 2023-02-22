@@ -23,34 +23,36 @@ std::string DefaultTag = ss.str();
 <div class="container px-2 py-5">
 <form action="EditIdea" method="POST">
 <div class="row justify-content-start mb-3">
-<div class="col-6 col-md-1">
-<label class="form-label">タイトル:</label>
+<div class="col-6 col-md-2 d-flex align-items-center">
+<label class="form-label my-auto">タイトル:</label>
 </div>
-<div class="col-12 col-md-9">
-<input class="title-input" type="text" name="idea_title" value="[[title]]" required>
+<div class="col-12 col-md-10">
+<input class="title-input form-control" type="text" name="idea_title" value="[[title]]" required>
 </div>
 </div>
 <div class="row justify-content-start mb-3">
-<div class="col-6 col-md-1">
+<div class="col-6 col-md-2">
 <label class="form-label">内容:</label>
 </div>
-<div class="col-12 col-md-9">
-<textarea name="idea_explain" rows="10" cols="100" style="vertical-align:top;">[[explain]]</textarea>
+<div class="col-12 col-md-10">
+<textarea class="form-control" name="idea_explain" rows="10" style="vertical-align:top;">[[explain]]</textarea>
 </div>
 </div>
 <div class="row justify-content-start mb-3">
-<div class="col-6 col-md-1">
-<label class="form-label">締切:</label>
+<div class="col-6 col-md-2 d-flex align-items-center">
+<label class="form-label my-auto">締切:</label>
 </div>
-<div class="col-6 col-md-1">
-<input type="date" name="idea_deadline" pattern="\d{4}-\d{2}-\d{2}" value="[[deadline]]" min = "[[today]]">
+<div class="col-6 col-md-2">
+<input class="form-control" type="date" name="idea_deadline" pattern="\d{4}-\d{2}-\d{2}" value="[[deadline]]" min = "[[today]]">
 </div>
 </div>
 <div class="row justify-content-start align-items-center g-3 mb-4">
-<div class="col-6 col-md-1">
-<label class="form-label">タグ管理:</label>
+<div class="col-6 col-md-2 d-flex align-items-center">
+<label class="form-label my-auto">タグ管理:</label>
 </div>
-<div class="col-auto">
+<div class="col-12 col-md-9">
+<div class="row">
+<div class="col-auto px-0 d-flex align-items-center">
 <div id="tag-area" class="row">
 <datalist id="Alltags">
 <%c++ for(auto othertag:AllTagList){%>
@@ -60,15 +62,17 @@ std::string DefaultTag = ss.str();
 <%c++ 
 int tagnum=1;
 for(auto tag:taglist){%>
-<div class="col-auto">
-<p class="tag-style" id="tag-{% tagnum %}" ontouchstart onclick="DeleteTagLabel({% tagnum %})">#{% tag %}</p>
+<div class="col-auto d-flex align-items-center">
+<p class="tag-style my-auto" id="tag-{% tagnum %}" ontouchstart onclick="DeleteTagLabel({% tagnum %})">#{% tag %}</p>
 </div>
 <%c++ tagnum++;}%>
 </div>
 </div>
-<div class="col-auto">
+<div class="col-auto d-flex align-items-center">
 <input type="text" id="tag-box" name="newtag" list="Alltags" autocomplete="off">
 <button class="btn btn-sm btn-outline-dark" type="button" onclick="MakeTagLabel()">追加</button>
+</div>
+</div>
 </div>
 </div>
 <div class="row">

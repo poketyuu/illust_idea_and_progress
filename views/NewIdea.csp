@@ -6,6 +6,7 @@
 <%c++ 
 auto tagList = @@.get<std::vector<std::string>>("tagList");
 %>
+<link rel="stylesheet" href="/css/IdeaEdit.css">
 </head>
 <body>
 <%view tempbody%>
@@ -16,34 +17,36 @@ auto tagList = @@.get<std::vector<std::string>>("tagList");
 </div>
 <form action="AddIdea" method="POST">
 <div class="row mb-3">
-<div class="col-auto">
-<label class="form-label">タイトル:</label>
+<div class="col-6 col-md-2 d-flex align-items-center">
+<label class="form-label my-auto">タイトル:</label>
 </div>
-<div class="col-auto">
-<input type="text" name="idea_title" required>
-</div>
-</div>
-<div class="row mb-3">
-<div class="col-auto">
-<label class="form-label">内容:</label>
-</div>
-<div class="col-auto">
-<textarea name="idea_explain" rows="7" cols="50" style="vertical-align:top;"></textarea>
+<div class="col-12 col-md-9">
+<input class="title-input form-control" type="text" name="idea_title" required>
 </div>
 </div>
 <div class="row mb-3">
-<div class="col-auto">
-<label class="form-label">締切:</label>
+<div class="col-6 col-md-2">
+<label class="form-label my-auto">内容:</label>
 </div>
-<div class="col-auto">
-<input type="date" name="idea_deadline" pattern="\d{4}-\d{2}-\d{2}">
+<div class="col-12 col-md-9">
+<textarea class="form-control" name="idea_explain" rows="10" style="vertical-align:top;"></textarea>
 </div>
 </div>
 <div class="row mb-3">
-<div class="col-auto">
-<label class="form-label">タグ:</label>
+<div class="col-6 col-md-2 d-flex align-items-center">
+<label class="form-label my-auto">締切:</label>
 </div>
-<div class="col-auto">
+<div class="col-6 col-md-2">
+<input class="form-control" type="date" name="idea_deadline" pattern="\d{4}-\d{2}-\d{2}">
+</div>
+</div>
+<div class="row mb-3 align-item-center">
+<div class="col-6 col-md-2 d-flex align-items-center">
+<label class="form-label my-auto">タグ:</label>
+</div>
+<div class="col-12 col-md-9">
+<div class="row">
+<div class="col-auto px-0 d-flex align-items-center">
 <div id="tag-area" class="row">
 <datalist id="Alltags">
 <%c++ for(auto tag:tagList){%>
@@ -52,11 +55,13 @@ auto tagList = @@.get<std::vector<std::string>>("tagList");
 </datalist>
 </div>
 </div>
-<div class="col-auto">
+<div class="col-auto d-flex align-items-center">
 <input type="text" id="tag-box" name="newtag" list="Alltags" autocomplete="off">
 </div>
 <div class="col-auto">
 <button type="button" onclick="MakeTagLabel()">追加</button>
+</div>
+</div>
 </div>
 </div>
 <div class="row mb-3">
