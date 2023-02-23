@@ -490,7 +490,9 @@ std::string idea::IdeaAllSQL(std::string tag,std::string Keyword, std::string Is
     if (!Keyword.empty())
     {
         if(Keyword.find("'") == std::string::npos){
-            where = where + " and title like '%" + Keyword + "%'";
+            where = where + " and (id,iid) in (select id,iid from idea where id = $1 and title like '%" + Keyword +
+                    "%' union select id,iid from idea where id = $1 and context like '%" + Keyword +
+                    "%' union select id,iid from class where id = $1 and name like '%" + Keyword + "%')";
         }
     }
     if(IsComp=="True"){
