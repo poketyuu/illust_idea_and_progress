@@ -58,7 +58,7 @@ function AddState() {
     var col2_1 = document.createElement("div");
     col2_1.setAttribute("class", "col-auto");
     var editbtn = document.createElement("button");
-    editbtn.setAttribute("class", "btn bnt-sm btn-outline-secondary");
+    editbtn.setAttribute("class", "btn btn-sm btn-outline-secondary");
     editbtn.setAttribute("onclick","ChangeEditMode(true,"+MaxSid+")")
     editbtn.textContent = "名前を変更";
     col2_1.appendChild(editbtn);
