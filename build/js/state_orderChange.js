@@ -58,7 +58,7 @@ function AddState() {
     var col2_1 = document.createElement("div");
     col2_1.setAttribute("class", "col-auto");
     var editbtn = document.createElement("button");
-    editbtn.setAttribute("class", "btn btn-outline-secondary");
+    editbtn.setAttribute("class", "btn bnt-sm btn-outline-secondary");
     editbtn.setAttribute("onclick","ChangeEditMode(true,"+MaxSid+")")
     editbtn.textContent = "名前を変更";
     col2_1.appendChild(editbtn);
@@ -67,7 +67,7 @@ function AddState() {
     var col2_2 = document.createElement("div");
     col2_2.setAttribute("class", "col-auto")
     var deletebtn = document.createElement("button");
-    deletebtn.setAttribute("class", "btn btn-outline-danger");
+    deletebtn.setAttribute("class", "btn btn-sm btn-outline-danger");
     deletebtn.setAttribute("onclick","DeleteState("+MaxSid+")");
     deletebtn.textContent = "削除";
     col2_2.appendChild(deletebtn);
@@ -114,7 +114,7 @@ function AddState() {
     var editcol2_1 = document.createElement("div");
     editcol2_1.setAttribute("class", "col-auto");
     var changebtn = document.createElement("button");
-    changebtn.setAttribute("class", "btn btn-outline-primary");
+    changebtn.setAttribute("class", "btn btn-sm btn-outline-primary");
     changebtn.setAttribute("onclick", "EditStateName(" + MaxSid + ")");
     changebtn.textContent = "変更";
     editcol2_1.appendChild(changebtn);
@@ -123,7 +123,7 @@ function AddState() {
     var editcol2_2 = document.createElement("div");
     editcol2_2.setAttribute("class", "col-auto")
     var deletebtn = document.createElement("button");
-    deletebtn.setAttribute("class", "btn btn-outline-secondary");
+    deletebtn.setAttribute("class", "btn btn-sm btn-outline-secondary");
     deletebtn.setAttribute("onclick", "ChangeEditMode(false," + MaxSid + ")");
     deletebtn.textContent = "キャンセル";
     editcol2_2.appendChild(deletebtn);
