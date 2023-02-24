@@ -85,6 +85,7 @@ void myPage::ChangeStates(const HttpRequestPtr &req, std::function<void(const Ht
         }
         for(auto sid:oldsidList){
             if(sid<2) break;
+            DBClient->execSqlAsyncFuture("update progress set sid = 0 where (id,iid) in (select id,iid from progress where sid = $1 and id = $2)", sid, UserID);
             DBClient->execSqlAsyncFuture("delete from state where sid = $1 and id = $2", sid, UserID);
         }
     }
