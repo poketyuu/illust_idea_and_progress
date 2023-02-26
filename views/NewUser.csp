@@ -13,7 +13,7 @@ body {padding-top: 50px;}
 <header>
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
 <div class="container-fluid">
-<a class="navbar-brand">illust_idea_and_progress</a>
+<a class="navbar-brand" href="/">illust_idea_and_progress</a>
 </div>
 </nav>
 </header>

@@ -13,13 +13,13 @@ body {padding-top: 50px;}
 <header>
 <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
 <div class="container-fluid">
-<a class="navbar-brand">illust_idea_and_progress</a>
+<a class="navbar-brand" href="/">illust_idea_and_progress</a>
 </div>
 </nav>
 </header>
 <main class="form-signin w-100 m-auto">
 <form action="login" method="POST">
-<h1 class="h3 mb-3 fw-normal">Login</h1>
+<h1 class="h3 mb-3 fw-normal">ログイン</h1>
 <div class="form-floating">
 <input type="text" name="id" class="form-control" placeholder="ID" id="InputID" required>
 <label for="InputID">ID</label>

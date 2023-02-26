@@ -27,10 +27,10 @@
                 <div class="navbar-collapse collapse" id="navbarCollapse">
                     <ul class="navbar-nav ms-auto mb-2 mb-md-0">
                         <li class="nav-item me-2">
-                            <a class="nav-link" href="/login/login">Sign in</a>
+                            <a class="nav-link" href="/login/login">ログイン</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/login/newUser">Sign up</a>
+                            <a class="nav-link" href="/login/newUser">新規登録</a>
                         </li>
                     </ul>
                 </div>
@@ -39,8 +39,8 @@
     </header>
     <main>
         <div class="container-fluid">
-            <div class="container px-2 py-5">
-                <div class="row d-flex justify-content-center mb-5">
+            <div class="container px-2 py-3 my-5 bg-white">
+                <div class="row d-flex justify-content-center mb-2">
                     <div class="col-auto">
                         <p class="text-highlight text-center mb-4">
                             アイデアを整理して<br>
@@ -53,30 +53,62 @@
                         </p>
                     </div>
                 </div>
+            </div>
+            <div class="container px-2 py-2 my-3 bg-white">
                 <div class="row d-flex justify-content-center">
                     <div class="col-auto">
                         <p class="text-highlight text-center">
                             How to use?
                         </p>
-                        <ol>
-                            <li class="mb-2">
-                                メニュー &rarr; マイ進捗より進捗状況の一覧を編集。自分好みに進捗状況を追加、削除して
-                                進捗順に並び替えましょう。<br>
-                            </li>
-                            <li class="mb-2">
-                                新規アイデアより、新しいアイデアを追加しましょう。タグの追加や締切の設定等はここで行える他、
-                                アイデア作成後に編集することも可能です。追加されたアイデアは進捗順、締切順、また作成が古い順にトップ
-                                画面に表示されます。<br>
-                            </li>
-                            <li class="mb-2">
-                                各アイデアに進捗があった際にはトップ画面および各アイデアの個別画面のドロップダウンメニューより
-                                進捗状況の変更を行いましょう。変更ボタンを押すと進捗状況が更新されます。完成目指して頑張りましょう！<br>
-                            </li>
-                            <li class="mb-2">
-                                アイデア一覧画面では完成したアイデアも含めて全てのアイデアが確認できる他、タグやキーワードを
-                                用いた検索を行うことが可能です。上手にアイデアを整理して進捗上手になりましょう。<br>
-                            </li>
-                        </ol>
+                    </div>
+                </div>
+                <div class="row row-cols-1 row-cols-md-2 g-2">
+                    <div class="col">
+                        <div class="card h-100 mb-3">
+                            <img src="..." class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">進捗設定</h5>
+                                <p class="card-text">
+                                    [メニュー]&rarr;[マイ進捗]より自分に好みに進捗状況を追加、編集しましょう。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 mb-3">
+                            <img src="..." class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title">アイデア追加</h5>
+                                <p class="card-text">
+                                    [新規アイデア]よりいつでもどこでも新しいアイデアを追加しましょう。
+                                    タグの追加や締切の設定はここで行える他、アイデア作成後に編集することも可能です。
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 mb-3">
+                            <img class="card-img-top" src="...">
+                            <div class="card-body">
+                                <h5 class="card-title">進捗更新</h5>
+                                <p class="card-text">
+                                    進捗があった際にはトップ画面および各アイデアの個別画面のドロップダウンメニューより進捗状況の変更を行いましょう。
+                                    変更ボタンを押すと進捗状況が更新されます。完成目指して頑張りましょう！
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="card h-100 mb-3">
+                            <img class="card-img-top" src="...">
+                            <div class="card-body">
+                                <h5 class="card-title">アイデア一覧</h5>
+                                <p class="card-text">
+                                    [アイデア一覧]では完成したアイデアも含めた全てにアイデアが確認できる他、タグやキーワードを用いた検索ができます。
+                                    アイデアの整理等にお役立てください。
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -84,7 +116,18 @@
     </main>
     <footer class="mt-auto py-3">
         <div class="container">
-            <a class="text-muted" href="privacy">プライバシーポリシー</a>
+            <div class="row d-flex justify-content-center">
+                <div class="col-auto">
+                    <a class="text-muted" href="privacy">プライバシーポリシー</a>
+                </div>
+                <div class="col-auto">
+                    <a class="text-muted"
+                        href="https://docs.google.com/forms/d/e/1FAIpQLScruiis1W5V7RUE0VUBuTBmqG246VnVFyHQHRVPHAM3Up5eBw/viewform?usp=sf_link"
+                        target="_blank" rel="noopener noreferrer">
+                        お問合せ
+                    </a>
+                </div>
+            </div>
         </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"

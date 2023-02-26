@@ -10,4 +10,8 @@ body {
 }
 .text-highlight{
     font-size: 200%;
+    font-weight: bold;
+}
+h5 {
+    font-weight: bold;
 }
