@@ -83,6 +83,7 @@ build/*
 !build/static_html/
 !build/css
 !build/js
+!build/img
 
 #config file
 #config.json

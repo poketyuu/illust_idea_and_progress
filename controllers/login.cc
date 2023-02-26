@@ -89,14 +89,10 @@ void login::addUser(const HttpRequestPtr &req, std::function<void(const HttpResp
             salt[i] = getRandomChar();
         }
         salt[LEN] = '\0';
-        std::cout << "salt:" << salt << std::endl;
-        std::cout << "pass:" << password << std::endl;
         std::string passsalt = salt + password;
-        std::cout << " salt+pass:"<<passsalt << std::endl;
         //ハッシュ化
         std::array<u_char, SHA512_DIGEST_LENGTH> passhash = {0};
         std::string digest = createDigestArray<char>(passsalt.c_str(), static_cast<size_t>(passsalt.length()), passhash);
-        std::cout << digest << std::endl;
         //DBにsaltと共に登録
         auto result = DBclient->execSqlAsyncFuture(
             AddUserSQL(digest,std::string(salt)),UserID).get();
