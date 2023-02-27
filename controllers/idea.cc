@@ -67,6 +67,13 @@ void idea::get(const HttpRequestPtr &req, std::function<void(const HttpResponseP
         auto viewData = HttpViewData();
         viewData.insert("idea", IdeaList);
         viewData.insert("state", MakeStateList(UserID));
+        bool IsComp = false;
+        if (req->session()->find("IsComp"))
+        {
+            req->session()->erase("IsComp");
+            IsComp = true;
+        }
+        viewData.insert("IsComp", IsComp);
         callback(HttpResponse::newHttpViewResponse("IdeaCsp.csp", viewData));
     }
     catch(const std::exception& e)
@@ -148,6 +155,7 @@ void idea::ideaInfo(const HttpRequestPtr &req, std::function<void(const HttpResp
         auto DBclient = drogon::app().getDbClient("default");
         auto result = DBclient->execSqlAsyncFuture("SELECT * FROM ideaview WHERE id = $1 AND iid = $2", userID, Ideaid).get();
         auto viewdata = HttpViewData();
+        viewdata.insert("id", Ideaid);
         viewdata.insert("title", result[0]["title"].as<std::string>());
         viewdata.insert("explain", result[0]["explain"].as<std::string>());
         viewdata.insert("deadline", result[0]["deadline"].as<std::string>());
@@ -167,6 +175,12 @@ void idea::ideaInfo(const HttpRequestPtr &req, std::function<void(const HttpResp
             AllTags.push_back(tag["name"].as<std::string>());
         }
         viewdata.insert("AllTags", AllTags);
+        bool IsComp = false;
+        if(req->session()->find("IsComp")){
+            req->session()->erase("IsComp");
+            IsComp = true;
+        }
+        viewdata.insert("IsComp", IsComp);
         callback(drogon::HttpResponse::newHttpViewResponse("IdeaMenu.csp", viewdata));
     }
     catch(const std::exception& e)
@@ -281,12 +295,13 @@ void idea::ChageState(const HttpRequestPtr &req, std::function<void(const HttpRe
         auto DBclient = drogon::app().getDbClient("default");
         auto stateid = DBclient->execSqlAsyncFuture("SELECT * FROM state where id = $1 AND turn = $2", UserID, std::stoi(para["progress_turn"])).get()[0]["sid"].as<int>();
         auto result = DBclient->execSqlAsyncFuture("UPDATE progress SET sid = $1 WHERE id = $2 AND iid = $3", stateid, UserID, std::stoi(para["progress_iid"])).get();
+        if(stateid==1)
+            req->session()->insert("IsComp", true);
     }
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
     }
-    
     auto viewdata = HttpViewData();
     viewdata.insert("newpage", "/idea/");
     auto res = drogon::HttpResponse::newHttpViewResponse("PageTransition.csp", viewdata);

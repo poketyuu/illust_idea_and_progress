@@ -4,6 +4,7 @@
 <%c++
 auto ideas = @@.get<std::vector<std::pair<int,std::vector<std::unordered_map<std::string,std::string>>>>>("idea");
 auto states = @@.get<std::map<int,std::string>>("state");
+auto IsComp = @@.get<bool>("IsComp");
 %>
 <%view temphead%>
 <link rel="stylesheet" href="/css/Ideacard.css">
@@ -69,6 +70,16 @@ if(ideacard.first == -1){
 </div>
 </main>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.3.2/dist/confetti.browser.min.js"></script>
+<%c++ if(IsComp){%>
+<script>
+confetti({
+  particleCount: 100,
+  spread: 70,
+  origin: { y: 0.6 }
+});
+</script>
+<%c++ }%>
 <script type="text/javascript" src="/js/progress_change_check.js"></script>
 </body>
 </html>
